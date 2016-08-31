@@ -60,7 +60,7 @@ class WeatherDisplayViewController: UIViewController, CLLocationManagerDelegate 
         self.observationLoader.getObservationForPlace(validCurrentPlace, options: AWFRequestOptions(), completion: { (observations, error) in
           
           if let validObservation: AWFObservation = observations.first as? AWFObservation {
-            
+            WeatherCodeParser.parseCode(validObservation.weatherCoded)
           }
           else {
             print("An error occured attempting to retrieve observation data from AWFObservationLoader\n\(error)")
@@ -111,4 +111,36 @@ class WeatherDisplayViewController: UIViewController, CLLocationManagerDelegate 
     return view
   }()
   
+}
+
+internal struct WeatherCodeParser {
+  // [coverage]:[intensity]:[weather]
+  
+  internal typealias ParsedWeather = (coverage: String? , intensity: String?, weather: String)
+  static func parseWeatherCode(code: String) {
+    
+    var codeComponents = code.componentsSeparatedByString(":")
+    if codeComponents.count == 3 {
+      let coverageCode: String? = WeatherCodeParser.coverageCodeParser(forCode: codeComponents[0])
+      let intensityCode: String? = WeatherCodeParser.intensityCodeParser(forCode: codeComponents[1])
+      let weatherCode: String? = WeatherCodeParser.weatherCodeParser(forCode: codeComponents[2])
+    }
+    
+  }
+  
+  static func cloudCodeParser(forCode code: String) -> String? {
+    
+  }
+  
+  static func coverageCodeParser(forCode code: String) -> String? {
+    
+  }
+  
+  static func intensityCodeParser(forCode code: String)  -> String? {
+    
+  }
+  
+  static func weatherCodeParser(forCode code: String)  -> String? {
+    
+  }
 }

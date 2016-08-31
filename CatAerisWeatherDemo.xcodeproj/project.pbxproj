@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		146921841D77591400E6A760 /* WeatherDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146921831D77591400E6A760 /* WeatherDisplayViewController.swift */; };
 		146921871D7759D700E6A760 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146921861D7759D700E6A760 /* Constants.swift */; };
+		146921891D7773A800E6A760 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146921881D7773A800E6A760 /* Helpers.swift */; };
 		14A1D45A1D77571900085E1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A1D4591D77571900085E1F /* AppDelegate.swift */; };
 		14A1D45F1D77571900085E1F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14A1D45D1D77571900085E1F /* Main.storyboard */; };
 		14A1D4611D77571900085E1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14A1D4601D77571900085E1F /* Assets.xcassets */; };
@@ -19,6 +20,7 @@
 /* Begin PBXFileReference section */
 		146921831D77591400E6A760 /* WeatherDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WeatherDisplayViewController.swift; path = "View Controllers/WeatherDisplayViewController.swift"; sourceTree = "<group>"; };
 		146921861D7759D700E6A760 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		146921881D7773A800E6A760 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		14A1D4561D77571900085E1F /* CatAerisWeatherDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatAerisWeatherDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14A1D4591D77571900085E1F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		14A1D45E1D77571900085E1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				146921861D7759D700E6A760 /* Constants.swift */,
+				146921881D7773A800E6A760 /* Helpers.swift */,
 				146921851D77591800E6A760 /* View Controllers */,
 				146921821D7758E300E6A760 /* Supporting Files */,
 			);
@@ -232,6 +235,7 @@
 				146921841D77591400E6A760 /* WeatherDisplayViewController.swift in Sources */,
 				14A1D45A1D77571900085E1F /* AppDelegate.swift in Sources */,
 				146921871D7759D700E6A760 /* Constants.swift in Sources */,
+				146921891D7773A800E6A760 /* Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
