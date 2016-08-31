@@ -18,8 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     AerisEngine.enableDebug()
     
     self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-    let navController = UINavigationController(rootViewController: WeatherDisplayViewController())
-    self.window?.rootViewController = navController
+    self.window?.rootViewController = WeatherDisplayViewController()
     self.window?.makeKeyAndVisible()
     
     return true
