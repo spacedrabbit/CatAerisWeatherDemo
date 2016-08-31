@@ -1,0 +1,6 @@
+framework module Pods_CatAerisWeatherDemo {
+  umbrella header "Pods-CatAerisWeatherDemo-umbrella.h"
+
+  export *
+  module * { export * }
+}

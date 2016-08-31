@@ -7,15 +7,21 @@
 //
 
 import UIKit
+import Aeris
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
-
-
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-    // Override point for customization after application launch.
+    AerisEngine.engineWithKey(AERIS_ID, secret: AERIS_SECRET)
+    AerisEngine.enableDebug()
+    
+    self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+    let navController = UINavigationController(rootViewController: WeatherDisplayViewController())
+    self.window?.rootViewController = navController
+    self.window?.makeKeyAndVisible()
+    
     return true
   }
 
