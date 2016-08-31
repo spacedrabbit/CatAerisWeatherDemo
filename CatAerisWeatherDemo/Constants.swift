@@ -7,7 +7,12 @@
 //
 
 import Foundation
+import UIKit
 
 let AERIS_ID: String = "aqwGb7NoFkJReYGPvZsRb"
 let AERIS_SECRET: String = "CCX6wXXefNwT6AjYYHlebF9SSZkUA59Q7eG6ZmgQ"
 let AERIS_NAMESPACE: String = "catthoughts.CatAerisWeatherDemo"
+
+internal struct AppLayout {
+  internal static let StandardMargin: CGFloat = 8.0
+}
