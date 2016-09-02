@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1409B84A1D7A222F00CCD187 /* CloudCodeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1409B8491D7A222F00CCD187 /* CloudCodeParser.swift */; };
+		1409B84C1D7A229400CCD187 /* IntensityCodeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1409B84B1D7A229400CCD187 /* IntensityCodeParser.swift */; };
+		1409B84E1D7A22C300CCD187 /* CoverageCodeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1409B84D1D7A22C300CCD187 /* CoverageCodeParser.swift */; };
+		1409B8501D7A230F00CCD187 /* AerisCodeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1409B84F1D7A230F00CCD187 /* AerisCodeParser.swift */; };
+		1409B8531D7A23DD00CCD187 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1409B8521D7A23DD00CCD187 /* LocationManager.swift */; };
 		146921841D77591400E6A760 /* WeatherDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146921831D77591400E6A760 /* WeatherDisplayViewController.swift */; };
 		146921871D7759D700E6A760 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146921861D7759D700E6A760 /* Constants.swift */; };
 		146921891D7773A800E6A760 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146921881D7773A800E6A760 /* Helpers.swift */; };
@@ -19,6 +24,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1409B8491D7A222F00CCD187 /* CloudCodeParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudCodeParser.swift; sourceTree = "<group>"; };
+		1409B84B1D7A229400CCD187 /* IntensityCodeParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityCodeParser.swift; sourceTree = "<group>"; };
+		1409B84D1D7A22C300CCD187 /* CoverageCodeParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverageCodeParser.swift; sourceTree = "<group>"; };
+		1409B84F1D7A230F00CCD187 /* AerisCodeParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AerisCodeParser.swift; sourceTree = "<group>"; };
+		1409B8521D7A23DD00CCD187 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		146921831D77591400E6A760 /* WeatherDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WeatherDisplayViewController.swift; path = "View Controllers/WeatherDisplayViewController.swift"; sourceTree = "<group>"; };
 		146921861D7759D700E6A760 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		146921881D7773A800E6A760 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
@@ -46,6 +56,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		14096D2F1D7A2743009BFD1D /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				1409B8521D7A23DD00CCD187 /* LocationManager.swift */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
+		1409B8511D7A23C300CCD187 /* Individual Parsers */ = {
+			isa = PBXGroup;
+			children = (
+				1469218A1D7776FF00E6A760 /* WeatherCodeParser.swift */,
+				1409B8491D7A222F00CCD187 /* CloudCodeParser.swift */,
+				1409B84B1D7A229400CCD187 /* IntensityCodeParser.swift */,
+				1409B84D1D7A22C300CCD187 /* CoverageCodeParser.swift */,
+			);
+			name = "Individual Parsers";
+			sourceTree = "<group>";
+		};
 		146921821D7758E300E6A760 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -69,8 +98,8 @@
 		1469218C1D77771A00E6A760 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				146921861D7759D700E6A760 /* Constants.swift */,
 				146921881D7773A800E6A760 /* Helpers.swift */,
+				146921861D7759D700E6A760 /* Constants.swift */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -78,7 +107,8 @@
 		1469218D1D77773500E6A760 /* Parsers */ = {
 			isa = PBXGroup;
 			children = (
-				1469218A1D7776FF00E6A760 /* WeatherCodeParser.swift */,
+				1409B84F1D7A230F00CCD187 /* AerisCodeParser.swift */,
+				1409B8511D7A23C300CCD187 /* Individual Parsers */,
 			);
 			name = Parsers;
 			sourceTree = "<group>";
@@ -105,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				1469218C1D77771A00E6A760 /* Common */,
+				14096D2F1D7A2743009BFD1D /* Managers */,
 				1469218D1D77773500E6A760 /* Parsers */,
 				146921851D77591800E6A760 /* View Controllers */,
 				146921821D7758E300E6A760 /* Supporting Files */,
@@ -252,10 +283,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				1469218B1D7776FF00E6A760 /* WeatherCodeParser.swift in Sources */,
+				1409B84A1D7A222F00CCD187 /* CloudCodeParser.swift in Sources */,
+				1409B8531D7A23DD00CCD187 /* LocationManager.swift in Sources */,
+				1409B84C1D7A229400CCD187 /* IntensityCodeParser.swift in Sources */,
 				146921841D77591400E6A760 /* WeatherDisplayViewController.swift in Sources */,
 				14A1D45A1D77571900085E1F /* AppDelegate.swift in Sources */,
 				146921871D7759D700E6A760 /* Constants.swift in Sources */,
 				146921891D7773A800E6A760 /* Helpers.swift in Sources */,
+				1409B84E1D7A22C300CCD187 /* CoverageCodeParser.swift in Sources */,
+				1409B8501D7A230F00CCD187 /* AerisCodeParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

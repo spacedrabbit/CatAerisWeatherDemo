@@ -10,24 +10,24 @@ import UIKit
 import SnapKit
 import Aeris
 
-class WeatherDisplayViewController: UIViewController, CLLocationManagerDelegate {
+class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   
   internal var currentPlace: AWFPlace?
   internal var defaultPlace: AWFPlace = AWFPlace(city: "new york", state: "ny", country: "us")
   internal var observationLoader: AWFObservationsLoader = AWFObservationsLoader()
-  internal var locationManager: CLLocationManager = CLLocationManager()
+  
+  private var trackedLocation: CLLocation?
+  internal var locationHelper: LocationHelper = LocationHelper.manager
   
   
   // MARK: View Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
+    
     self.setupViewHierarchy()
     self.configureConstraints()
     
-    self.view.backgroundColor = AppColors.DarkBackground
-    self.locationManager.delegate = self
-    self.checkLocationAuthorization()
-    self.updateViews()
+    self.locationHelper.delegate = self
   }
   
   override func didReceiveMemoryWarning() {
@@ -36,6 +36,7 @@ class WeatherDisplayViewController: UIViewController, CLLocationManagerDelegate 
   }
   
   
+  // ---------------------------------------------------------------- //
   // MARK: - Setup
   private func configureConstraints() {
     self.containerView.snp_makeConstraints { (make) in
@@ -73,65 +74,49 @@ class WeatherDisplayViewController: UIViewController, CLLocationManagerDelegate 
     self.containerView.addSubview(currentTempLabel)
     self.containerView.addSubview(weatherDescriptionLabel)
     self.containerView.addSubview(weatherIconImageView)
+    
+    self.view.backgroundColor = AppColors.DarkBackground
   }
-  
-  
-  // MARK: - Location Setup/Retrieval
-  func checkLocationAuthorization() {
-    if CLLocationManager.authorizationStatus() == .NotDetermined {
-      self.locationManager.requestAlwaysAuthorization()
-    }
-    else {
-      self.locationManager.startUpdatingLocation()
-    }
-  }
-  
-  func updateViews() {
 
-    // lots of messy nested functions, would split this out considerably
-    if let validLocation: CLLocation = self.locationManager.location {
-      self.currentPlace = AWFPlace(coordinate: validLocation.coordinate)
-      if let validCurrentPlace = self.currentPlace {
-        self.observationLoader.getObservationForPlace(validCurrentPlace, options: AWFRequestOptions(), completion: { (observations, error) in
-          
-          if let validObservation: AWFObservation = observations.first as? AWFObservation {
-            if let parsedWeather = WeatherCodeParser.parseWeatherCode(validObservation.weatherCoded) {
-              
-              // I know that the weather component is the only one that is returning a valid value, so I'm just going to display that
-              dispatch_async(dispatch_get_main_queue(), { 
-                self.weatherDescriptionLabel.text = parsedWeather.weather!
-                self.currentTempLabel.text = "\(validObservation.heatindexF)"
-                self.locationLabel.text = validObservation.place.name
-              })
-            }
+  
+  // ---------------------------------------------------------------- //
+  // MARK: - LocationHelperDelegate
+  func authorizationStatusDidChange(status: LocationHelperStatus) {
+    
+  }
+  
+  func alertRequiresDisplay(alert: UIAlertController) {
+    self.showViewController(alert, sender: self)
+  }
+  
+  func trackedLocationDidChange(location: CLLocation) {
+    
+    self.currentPlace = AWFPlace(coordinate: location.coordinate)
+    if let validCurrentPlace = self.currentPlace {
+      self.observationLoader.getObservationForPlace(validCurrentPlace, options: AWFRequestOptions(), completion: { (observations, error) in
+        
+        if let validObservation: AWFObservation = observations.first as? AWFObservation {
+          if let parsedWeather = AerisCodeParser.parseWeatherCode(validObservation.weatherCoded) {
+            
+            // I know that the weather component is the only one that is returning a valid value, so I'm just going to display that
+            dispatch_async(dispatch_get_main_queue(), {
+              self.weatherDescriptionLabel.text = parsedWeather.weather!
+              self.currentTempLabel.text = "\(validObservation.heatindexF)"
+              self.locationLabel.text = validObservation.place.name
+            })
           }
-          else {
-            // veeeeery light error checking...
-            print("An error occured attempting to retrieve observation data from AWFObservationLoader\n\(error)")
-          }
-          
-        })
-      }
+        }
+        else {
+          // veeeeery light error checking...
+          print("An error occured attempting to retrieve observation data from AWFObservationLoader\n\(error)")
+        }
+        
+      })
     }
     
   }
   
-  // MARK: - CLLocationManagerDelegate
-  func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-    switch status {
-    case .AuthorizedAlways, .AuthorizedWhenInUse:
-      self.locationManager.startUpdatingLocation()
-    case .NotDetermined:
-      print("undetermined status")
-    case .Denied, .Restricted:
-      let alert = UIAlertController(title: "Weather Services Unavailable", message: "It appears as though location services are not enabled for this app. Check your settings and try again", preferredStyle: .Alert)
-      let alertOption: UIAlertAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
-      alert.addAction(alertOption)
-      self.showViewController(alert, sender: self)
-    }
-  }
-  
-  
+  // ---------------------------------------------------------------- //
   // MARK: - Lazy Init
   internal lazy var containerView: UIView = {
     let view: UIView = UIView()
