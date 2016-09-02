@@ -125,6 +125,8 @@ class WeatherDisplayViewController: UIViewController, CLLocationManagerDelegate 
       print("undetermined status")
     case .Denied, .Restricted:
       let alert = UIAlertController(title: "Weather Services Unavailable", message: "It appears as though location services are not enabled for this app. Check your settings and try again", preferredStyle: .Alert)
+      let alertOption: UIAlertAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+      alert.addAction(alertOption)
       self.showViewController(alert, sender: self)
     }
   }
