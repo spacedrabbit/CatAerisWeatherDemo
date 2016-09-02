@@ -13,6 +13,7 @@ import Aeris
 class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   
   internal var currentPlace: AWFPlace?
+  // TODO: eventually, if the current location is not found, set it to this default
   internal var defaultPlace: AWFPlace = AWFPlace(city: "new york", state: "ny", country: "us")
   internal var observationLoader: AWFObservationsLoader = AWFObservationsLoader()
   
@@ -35,6 +36,14 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
     // Dispose of any resources that can be recreated.
   }
   
+  
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+
+    self.temperatureScaleIcon.snp_updateConstraints { (make) in
+      make.height.equalTo(self.currentTempLabel.intrinsicContentSize().height * 0.80)
+    }
+  }
   
   // ---------------------------------------------------------------- //
   // MARK: - Setup
@@ -61,6 +70,11 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
       make.centerX.equalTo(self.containerView)
     }
     
+    self.temperatureScaleIcon.snp_makeConstraints { (make) in
+      make.left.equalTo(self.currentTempLabel.snp_right).inset(AppLayout.StandardMargin)
+      make.centerY.equalTo(self.currentTempLabel)
+    }
+    
     self.weatherDescriptionLabel.snp_makeConstraints { (make) in
       make.top.equalTo(self.currentTempLabel.snp_bottom).offset(AppLayout.StandardMargin)
       make.centerX.equalTo(self.containerView)
@@ -74,15 +88,41 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
     self.containerView.addSubview(currentTempLabel)
     self.containerView.addSubview(weatherDescriptionLabel)
     self.containerView.addSubview(weatherIconImageView)
+    self.containerView.addSubview(temperatureScaleIcon)
     
     self.view.backgroundColor = AppColors.DarkBackground
+    self.containerView.layer.cornerRadius = AppLayout.StandardMargin
   }
-
+  
+  
+  // ---------------------------------------------------------------- //
+  // MARK: - UI Updates
+  internal func updateUIElementsFor(observation: AWFObservation) {
+    // TODO: make this parsing a lot better ffs
+    if let parsedWeather = AerisCodeParser.parseWeatherCode(observation.weatherCoded) {
+      
+      // I know that the weather component is the only one that is returning a valid value, so I'm just going to display that
+      dispatch_async(dispatch_get_main_queue(), {
+        self.weatherDescriptionLabel.text = parsedWeather.weather!
+        self.currentTempLabel.text = "\(observation.heatindexF)"
+        self.locationLabel.text = observation.place.name
+      })
+    }
+  }
+  
   
   // ---------------------------------------------------------------- //
   // MARK: - LocationHelperDelegate
   func authorizationStatusDidChange(status: LocationHelperStatus) {
-    
+    // not entirely sure how I'm going to use this yet, but likely will be needed for something
+    switch status {
+    case .Ready:
+      print("Location Status is Ready")
+    case .NotReady:
+      print("Location Status is Not Ready")
+    case .Denied:
+      print("Location Status is Denied")
+    }
   }
   
   func alertRequiresDisplay(alert: UIAlertController) {
@@ -92,27 +132,15 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   func trackedLocationDidChange(location: CLLocation) {
     
     self.currentPlace = AWFPlace(coordinate: location.coordinate)
-    if let validCurrentPlace = self.currentPlace {
-      self.observationLoader.getObservationForPlace(validCurrentPlace, options: AWFRequestOptions(), completion: { (observations, error) in
-        
-        if let validObservation: AWFObservation = observations.first as? AWFObservation {
-          if let parsedWeather = AerisCodeParser.parseWeatherCode(validObservation.weatherCoded) {
-            
-            // I know that the weather component is the only one that is returning a valid value, so I'm just going to display that
-            dispatch_async(dispatch_get_main_queue(), {
-              self.weatherDescriptionLabel.text = parsedWeather.weather!
-              self.currentTempLabel.text = "\(validObservation.heatindexF)"
-              self.locationLabel.text = validObservation.place.name
-            })
-          }
-        }
-        else {
-          // veeeeery light error checking...
-          print("An error occured attempting to retrieve observation data from AWFObservationLoader\n\(error)")
-        }
-        
-      })
-    }
+    self.observationLoader.getObservationForPlace(self.currentPlace!, options: AWFRequestOptions(), completion: { (observations, error) in
+      if let validObservation: AWFObservation = observations.first as? AWFObservation {
+        self.updateUIElementsFor(validObservation)
+      }
+      else {
+        print("An error occured attempting to retrieve observation data from AWFObservationLoader\n\(error)")
+        self.locationHelper.restartLocationService() // TODO: this needs testing and better  handling
+      }
+    })
     
   }
   
@@ -150,6 +178,13 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   
   internal lazy var weatherIconImageView: UIImageView = {
     let imageView: UIImageView = UIImageView(image: UIImage(named: "cloudy"))
+    imageView.contentMode = .ScaleAspectFit
+    return imageView
+  }()
+  
+  internal lazy var temperatureScaleIcon: UIImageView = {
+    var imageView: UIImageView = UIImageView(image: UIImage(named: "far")?.imageWithRenderingMode(.AlwaysTemplate))
+    imageView.tintColor = AppColors.StandardTextColor
     imageView.contentMode = .ScaleAspectFit
     return imageView
   }()

@@ -54,6 +54,14 @@ internal class LocationHelper: NSObject, CLLocationManagerDelegate {
   
   
   // ---------------------------------------------------------------- //
+  // MARK: - Helpers
+  internal func restartLocationService() {
+    self.locationManager.stopUpdatingLocation()
+    self.locationManager.startUpdatingLocation()
+  }
+  
+  
+  // ---------------------------------------------------------------- //
   // MARK: - CLLocationManagerDelegate
   func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
     var delegateStatus: LocationHelperStatus
