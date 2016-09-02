@@ -16,6 +16,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   // TODO: eventually, if the current location is not found, set it to this default
   internal var defaultPlace: AWFPlace = AWFPlace(city: "new york", state: "ny", country: "us")
   internal var observationLoader: AWFObservationsLoader = AWFObservationsLoader()
+  internal var forecastLoader: AWFForecastsLoader = AWFForecastsLoader()
   
   private var trackedLocation: CLLocation?
   internal var locationHelper: LocationHelper = LocationHelper.manager
@@ -132,6 +133,17 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   func trackedLocationDidChange(location: CLLocation) {
     
     self.currentPlace = AWFPlace(coordinate: location.coordinate)
+    
+    self.forecastLoader.getForecastForPlace(self.currentPlace!, options: AWFRequestOptions()) { (forecasts, error) in
+      if forecasts.count > 0 {
+        if let forecast: AWFForecast = forecasts.first as? AWFForecast {
+          // TODO: get data from forecast obj
+          // TODO: work with .periods property (AWFPeriod) to populate data
+        }
+      }
+    }
+    
+    
     self.observationLoader.getObservationForPlace(self.currentPlace!, options: AWFRequestOptions(), completion: { (observations, error) in
       if let validObservation: AWFObservation = observations.first as? AWFObservation {
         self.updateUIElementsFor(validObservation)
