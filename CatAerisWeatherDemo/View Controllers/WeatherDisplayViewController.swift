@@ -17,6 +17,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   internal var defaultPlace: AWFPlace = AWFPlace(city: "new york", state: "ny", country: "us")
   internal var observationLoader: AWFObservationsLoader = AWFObservationsLoader()
   internal var forecastLoader: AWFForecastsLoader = AWFForecastsLoader()
+  internal var placeLoader: AWFPlacesLoader = AWFPlacesLoader()
   
   private var trackedLocation: CLLocation?
   internal var locationHelper: LocationHelper = LocationHelper.manager
@@ -98,20 +99,22 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   
   // ---------------------------------------------------------------- //
   // MARK: - UI Updates
-  internal func updateUIElementsForObservation(observation: AWFObservation) {
-    // TODO: make this parsing a lot better ffs
-    if let parsedWeather = AerisCodeParser.parseWeatherCode(observation.weatherCoded) {
-      
-      // I know that the weather component is the only one that is returning a valid value, so I'm just going to display that
-      dispatch_async(dispatch_get_main_queue(), {
-        self.weatherDescriptionLabel.text = parsedWeather.weather!
-        self.currentTempLabel.text = "\(observation.heatindexF)"
-        self.locationLabel.text = observation.place.name
-      })
-    }
+  internal func updateDailyHUD(period: AWFForecastPeriod) {
+    self.weatherDescriptionLabel.text = period.weatherFull
+    self.currentTempLabel.text = "\(period.avgTempF)"
+    self.locationLabel.text = self.currentPlace!.formattedNameFull
   }
   
   internal func updateUIElementsForForcast(forecast: AWFForecast) {
+    
+    periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
+      let dateHelper = DateConversionHelper(withDate: period.timestamp)
+      if dateHelper.isTodaysDate() {
+        self.updateDailyHUD(period)
+        continue periodLoop
+      }
+      print("use rest of these to fill out collection view")
+    }
     
   }
   
@@ -135,28 +138,24 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   
   func trackedLocationDidChange(location: CLLocation) {
     
+     // ugh... these requests are going to beed to be batched since these async responses aren't guaranteed to be available
+    // when the UI is updating...
     self.currentPlace = AWFPlace(coordinate: location.coordinate)
-    
-    self.forecastLoader.getForecastForPlace(self.currentPlace!, options: AWFRequestOptions()) { (forecasts, error) in
-      if forecasts.count > 0 {
-        if let forecast: AWFForecast = forecasts.first as? AWFForecast {
-          // TODO: get data from forecast obj
-          // TODO: work with .periods property (AWFPeriod) to populate data
+    self.placeLoader.getPlace(AWFPlace(coordinate: location.coordinate), options: AWFRequestOptions()) { (places, error) in
+      if places.count > 0 {
+        if let validPlace: AWFPlace = places.first as? AWFPlace {
+          self.currentPlace = validPlace
         }
       }
     }
     
-    
-    self.observationLoader.getObservationForPlace(self.currentPlace!, options: AWFRequestOptions(), completion: { (observations, error) in
-      if let validObservation: AWFObservation = observations.first as? AWFObservation {
-        self.updateUIElementsForObservation(validObservation)
+    self.forecastLoader.getForecastForPlace(self.currentPlace!, options: AWFRequestOptions()) { (forecasts, error) in
+      if forecasts.count > 0 {
+        if let forecast: AWFForecast = forecasts.first as? AWFForecast {
+          self.updateUIElementsForForcast(forecast)
+        }
       }
-      else {
-        print("An error occured attempting to retrieve observation data from AWFObservationLoader\n\(error)")
-        self.locationHelper.restartLocationService() // TODO: this needs testing and better  handling
-      }
-    })
-    
+    }
   }
   
   // ---------------------------------------------------------------- //
@@ -192,7 +191,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   }()
   
   internal lazy var weatherIconImageView: UIImageView = {
-    let imageView: UIImageView = UIImageView(image: UIImage(named: "cloudy"))
+    let imageView: UIImageView = UIImageView(image: UIImage(named: "cloudy_day"))
     imageView.contentMode = .ScaleAspectFit
     return imageView
   }()
