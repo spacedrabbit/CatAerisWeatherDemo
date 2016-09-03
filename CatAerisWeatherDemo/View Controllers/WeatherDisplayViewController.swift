@@ -98,7 +98,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   
   // ---------------------------------------------------------------- //
   // MARK: - UI Updates
-  internal func updateUIElementsFor(observation: AWFObservation) {
+  internal func updateUIElementsForObservation(observation: AWFObservation) {
     // TODO: make this parsing a lot better ffs
     if let parsedWeather = AerisCodeParser.parseWeatherCode(observation.weatherCoded) {
       
@@ -111,6 +111,9 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
     }
   }
   
+  internal func updateUIElementsForForcast(forecast: AWFForecast) {
+    
+  }
   
   // ---------------------------------------------------------------- //
   // MARK: - LocationHelperDelegate
@@ -146,7 +149,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
     
     self.observationLoader.getObservationForPlace(self.currentPlace!, options: AWFRequestOptions(), completion: { (observations, error) in
       if let validObservation: AWFObservation = observations.first as? AWFObservation {
-        self.updateUIElementsFor(validObservation)
+        self.updateUIElementsForObservation(validObservation)
       }
       else {
         print("An error occured attempting to retrieve observation data from AWFObservationLoader\n\(error)")
