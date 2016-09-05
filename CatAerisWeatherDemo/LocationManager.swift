@@ -89,7 +89,12 @@ internal class LocationHelper: NSObject, CLLocationManagerDelegate {
     if let validLocation: CLLocation = locations.first {
       if let trackingLocation: CLLocation = self.trackedLocation {
         // if a tracked location exist, check that it's not already the same
-        if trackingLocation != validLocation {
+        
+        // Note: this delegate method can fire multiple times due to the precision of the lat/long changing slightly and rapidly
+        // while the app first looks for it's current location. So, an arbitrary standard of 50.0 meters is used to compare the 
+        // currently tracked location with the (potentially) slightly different location pass in subsequent calls to this method.
+        if (trackingLocation != validLocation) &&
+           (trackingLocation.distanceFromLocation(validLocation) > 50.0) {
           self.trackedLocation = validLocation // update if it is different
         }
       }
