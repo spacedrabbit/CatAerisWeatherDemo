@@ -29,6 +29,9 @@ internal class AerisRequestManager {
   private var lastRequestedForecastDictionary: [AWFPlace : AWFForecast] = [:]
   internal weak var delegate: AerisRequestManagerDelegate?
   
+  // TODO: eventually, if the current location is not found, set it to this default
+  internal var defaultPlace: AWFPlace = AWFPlace(city: "new york", state: "ny", country: "us")
+  
   internal var observationLoader: AWFObservationsLoader = AWFObservationsLoader()
   internal var forecastLoader: AWFForecastsLoader = AWFForecastsLoader()
   internal var placeLoader: AWFPlacesLoader = AWFPlacesLoader()

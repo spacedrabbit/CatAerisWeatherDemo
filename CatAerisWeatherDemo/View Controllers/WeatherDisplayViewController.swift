@@ -12,14 +12,7 @@ import Aeris
 
 class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, AerisRequestManagerDelegate {
   
-  internal var currentPlace: AWFPlace?
-  // TODO: eventually, if the current location is not found, set it to this default
-  internal var defaultPlace: AWFPlace = AWFPlace(city: "new york", state: "ny", country: "us")
-  internal var observationLoader: AWFObservationsLoader = AWFObservationsLoader()
-  internal var forecastLoader: AWFForecastsLoader = AWFForecastsLoader()
-  internal var placeLoader: AWFPlacesLoader = AWFPlacesLoader()
-  
-  private var trackedLocation: CLLocation?
+  internal var currentPlace: AWFPlace = AWFPlace()
   internal var locationHelper: LocationHelper = LocationHelper.manager
   internal var aerisManager: AerisRequestManager = AerisRequestManager.shared
   
@@ -44,6 +37,10 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   // ---------------------------------------------------------------- //
   // MARK: - Setup
   private func configureConstraints() {
+    self.loadingView.snp_makeConstraints { (make) in
+      make.edges.equalTo(self.view)
+    }
+    
     self.containerView.snp_makeConstraints { (make) in
       make.top.equalTo(self.view).offset(AppLayout.StandardMargin + AppLayout.StatusBar)
       make.left.equalTo(self.view).offset(AppLayout.StandardMargin)
@@ -67,6 +64,8 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
     self.view.addSubview(containerView)
     self.containerView.addSubview(weatherIconImageView)
     self.containerView.addSubview(currentWeatherCard)
+    
+    self.view.addSubview(loadingView)
 
     self.view.backgroundColor = AppColors.DarkBackground
     self.containerView.layer.cornerRadius = AppLayout.StandardMargin
@@ -75,7 +74,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   // ---------------------------------------------------------------- //
   // MARK: - UI Updates
-  internal func updateUIElementsForForcast(forecast: AWFForecast) {
+  internal func updateUIElementsForForcast(forecast: AWFForecast, completion: (()->Void)?) {
     
     // no real reason to use a control label here, I just wanted to try them
     periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
@@ -85,6 +84,9 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
         continue periodLoop
       }
       // TODO: create collection view data source from remaining forecast info
+      if completion != nil {
+        completion!()
+      }
     }
     
   }
@@ -121,7 +123,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   // MARK: - AerisRequestManagerDelegate
   func placesRequestDidFinish(place: AWFPlace) {
     self.currentPlace = place
-    self.aerisManager.beginForecastRequestForPlace(self.currentPlace!)
+    self.aerisManager.beginForecastRequestForPlace(self.currentPlace)
   }
   
   func placesRequestDidFailWithError(error: NSError) {
@@ -129,14 +131,18 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   }
   
   func forecastRequestDidFinish(forecast: AWFForecast, forPlace place: AWFPlace) {
-    self.updateUIElementsForForcast(forecast)
-//    self.updateUIElementsForPlace(place)
-    // ok something is up with this function, it's somehow stills saying its unwrapping an nil value
+    self.updateUIElementsForForcast(forecast) { () in
+      self.loadingView.animateOut()
+      // TODO: make sure interactively is fine, and that the view is actually removed
+    }
+    
+//    self.updateUIElementsForPlace(place) // ok something is up with this function, it's somehow stills saying its unwrapping an nil value
   }
   
   func forecastRequestDidFailWithError(error: NSError) {
     print("Forecast request failed: \(error)")
   }
+  
   
   // ---------------------------------------------------------------- //
   // MARK: - Lazy Init
@@ -160,6 +166,11 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
     let imageView: UIImageView = UIImageView(image: UIImage(named: "cloudy_day"))
     imageView.contentMode = .ScaleAspectFit
     return imageView
+  }()
+  
+  internal lazy var loadingView: LoadingView = {
+    let loadingView: LoadingView = LoadingView()
+    return loadingView
   }()
 
 }
