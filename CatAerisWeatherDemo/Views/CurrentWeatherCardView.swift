@@ -123,7 +123,7 @@ class CurrentWeatherCardView: UIView {
   }
   
   internal func updateUI(withPlace place: AWFPlace) {
-    self.locationLabel.text = place.region + ", " + place.zipcode
+    self.locationLabel.text = place.name + ", " + place.state
   }
   
   internal func updateUI(withForecastPeriod period: AWFForecastPeriod, place: AWFPlace) {

@@ -136,7 +136,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
       // TODO: make sure interactively is fine, and that the view is actually removed
     }
     
-//    self.updateUIElementsForPlace(place) // ok something is up with this function, it's somehow stills saying its unwrapping an nil value
+    self.updateUIElementsForPlace(place)
   }
   
   func forecastRequestDidFailWithError(error: NSError) {
