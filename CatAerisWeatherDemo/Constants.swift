@@ -20,6 +20,33 @@ internal struct AppLayout {
 
 internal struct AppFont {
   internal static let StandardFont: UIFont = UIFont.systemFontOfSize(36.0, weight: UIFontWeightMedium)
+
+  internal struct Roboto {
+    internal static let FamilyName: String = "Roboto"
+    internal static let Thin: String = "Roboto-Thin"
+    internal static let Italic: String = "Roboto-Italic"
+    internal static let BlackItalic: String = "Roboto-BlackItalic"
+    internal static let Light: String = "Roboto-Light"
+    internal static let BoldItalic: String = "Roboto-BoldItalic"
+    internal static let Black: String = "Roboto-Black"
+    internal static let LightItalic: String = "Roboto-LightItalic"
+    internal static let ThinItalic: String = "Roboto-ThinItalic"
+    internal static let Bold: String = "Roboto-Bold"
+    internal static let Regular: String = "Roboto-Regular"
+    internal static let Medium: String = "Roboto-Medium"
+    internal static let MediumItalic: String = "Roboto-MediumItalic"
+  }
+  
+  internal struct RobotoCondensed {
+    internal static let FamilyName: String = "RobotoCondensed"
+    internal static let Bold: String = "RobotoCondensed-Bold"
+    internal static let Light: String = "RobotoCondensed-Light"
+    internal static let BoldItalic: String = "RobotoCondensed-BoldItalic"
+    internal static let Italic: String = "RobotoCondensed-Italic"
+    internal static let Regular: String = "RobotoCondensed-Regular"
+    internal static let LightItalic: String = "RobotoCondensed-LightItalic"
+  }
+  
 }
 
 internal struct AppColors {

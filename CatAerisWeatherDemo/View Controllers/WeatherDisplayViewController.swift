@@ -42,9 +42,9 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     
-    self.temperatureScaleIcon.snp_updateConstraints { (make) in
-      make.height.equalTo(self.currentTempLabel.intrinsicContentSize().height * 0.80)
-    }
+//    self.temperatureScaleIcon.snp_updateConstraints { (make) in
+//      make.height.equalTo(self.currentTempLabel.intrinsicContentSize().height * 0.80)
+//    }
   }
   
   // ---------------------------------------------------------------- //
@@ -56,42 +56,24 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
       make.bottom.right.equalTo(self.view).inset(AppLayout.StandardMargin)
     }
     
-    self.locationLabel.snp_makeConstraints { (make) in
-      make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin).multipliedBy(4.0)
-      make.centerX.equalTo(self.containerView)
-    }
-    
     self.weatherIconImageView.snp_makeConstraints { (make) in
-      make.top.equalTo(self.locationLabel.snp_bottom).offset(AppLayout.StandardMargin)
-      make.centerX.equalTo(self.locationLabel)
+      make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
+      make.centerX.equalTo(self.containerView)
       make.size.equalTo(CGSize(width: 128.0, height: 128.0))
     }
     
-    self.currentTempLabel.snp_makeConstraints { (make) in
+    self.currentWeatherCard.snp_makeConstraints { (make) in
       make.top.equalTo(self.weatherIconImageView.snp_bottom).offset(AppLayout.StandardMargin)
-      make.centerX.equalTo(self.containerView)
-    }
-    
-    self.temperatureScaleIcon.snp_makeConstraints { (make) in
-      make.left.equalTo(self.currentTempLabel.snp_right).inset(AppLayout.StandardMargin)
-      make.centerY.equalTo(self.currentTempLabel)
-    }
-    
-    self.weatherDescriptionLabel.snp_makeConstraints { (make) in
-      make.top.equalTo(self.currentTempLabel.snp_bottom).offset(AppLayout.StandardMargin)
-      make.centerX.equalTo(self.containerView)
+      make.centerX.equalTo(self.weatherIconImageView)
+      make.width.equalTo(self.containerView).inset(AppLayout.StandardMargin)// - (2 * AppLayout.StandardMargin))
     }
   }
   
   private func setupViewHierarchy() {
     self.view.addSubview(containerView)
-    
-    self.containerView.addSubview(locationLabel)
-    self.containerView.addSubview(currentTempLabel)
-    self.containerView.addSubview(weatherDescriptionLabel)
     self.containerView.addSubview(weatherIconImageView)
-    self.containerView.addSubview(temperatureScaleIcon)
-    
+    self.containerView.addSubview(currentWeatherCard)
+
     self.view.backgroundColor = AppColors.DarkBackground
     self.containerView.layer.cornerRadius = AppLayout.StandardMargin
   }
@@ -99,24 +81,24 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   
   // ---------------------------------------------------------------- //
   // MARK: - UI Updates
-  internal func updateDailyHUD(period: AWFForecastPeriod) {
-    self.weatherDescriptionLabel.text = period.weatherFull
-    self.currentTempLabel.text = "\(period.avgTempF)"
-    self.locationLabel.text = self.currentPlace!.formattedNameFull
-  }
-  
   internal func updateUIElementsForForcast(forecast: AWFForecast) {
     
+    // no real reason to use a control label here, I just wanted to try them
     periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
       let dateHelper = DateConversionHelper(withDate: period.timestamp)
       if dateHelper.isTodaysDate() {
-        self.updateDailyHUD(period)
+        self.currentWeatherCard.updateUI(withForecastPeriod: period)
         continue periodLoop
       }
-//      print("use rest of these to fill out collection view")
+      // TODO: create collection view data source from remaining forecast info
     }
     
   }
+  
+  internal func updateUIElementsForPlace(place: AWFPlace) {
+    self.currentWeatherCard.updateUI(withPlace: place)
+  }
+  
   
   // ---------------------------------------------------------------- //
   // MARK: - LocationHelperDelegate
@@ -157,6 +139,9 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
           if places.count > 0 {
             if let validPlace: AWFPlace = places.first as? AWFPlace {
               self.currentPlace = validPlace
+              
+              // FIXME: Consistently saying that both currentPlace and validPlace are nil here... odd queueing effects, will need to fix
+//              self.updateUIElementsForPlace(validPlace)
             }
           }
         })
@@ -174,6 +159,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
     }
   }
   
+  
   // ---------------------------------------------------------------- //
   // MARK: - Lazy Init
   internal lazy var containerView: UIView = {
@@ -182,25 +168,11 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
     return view
   }()
   
-  internal lazy var weatherDescriptionLabel: UILabel = {
-    let label: UILabel = UILabel()
-    label.text = ""
-    label.font = AppFont.StandardFont
-    label.textColor = AppColors.StandardTextColor
-    return label
-  }()
+  internal lazy var currentWeatherCard: CurrentWeatherCardView = CurrentWeatherCardView(frame: CGRectZero)
   
   internal lazy var locationLabel: UILabel = {
     let label: UILabel = UILabel()
     label.text = "Loading..."
-    label.font = AppFont.StandardFont
-    label.textColor = AppColors.StandardTextColor
-    return label
-  }()
-  
-  internal lazy var currentTempLabel: UILabel = {
-    let label: UILabel = UILabel()
-    label.text = ""
     label.font = AppFont.StandardFont
     label.textColor = AppColors.StandardTextColor
     return label
@@ -211,12 +183,6 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
     imageView.contentMode = .ScaleAspectFit
     return imageView
   }()
-  
-  internal lazy var temperatureScaleIcon: UIImageView = {
-    var imageView: UIImageView = UIImageView(image: UIImage(named: "far")?.imageWithRenderingMode(.AlwaysTemplate))
-    imageView.tintColor = AppColors.StandardTextColor
-    imageView.contentMode = .ScaleAspectFit
-    return imageView
-  }()
+
 }
 

@@ -81,6 +81,8 @@ internal class DateConversionHelper {
     return self.dateFormatter.stringFromDate(self.convertedDate!)
   }
   
+  
+  // this is used to create a standardized string from a date that i can use to compare easily while ignoring minor differences between NSDates
   internal func dateAsComparable() -> String {
     self.dateFormatter.dateFormat = DateFormat.ComparisonFormat
     return self.dateFormatter.stringFromDate(self.convertedDate!)
@@ -93,7 +95,7 @@ internal class DateConversionHelper {
     let newDate: String = DateConversionHelper(withDate: NSDate()).dateAsComparable()
     
     if storedDate == newDate {
-      print("Both string are the same")
+//      print("Both string are the same")
       return true
     }
     

@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     AerisEngine.engineWithKey(AERIS_ID, secret: AERIS_SECRET)
 //    AerisEngine.enableDebug()
-    
+
     self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
     self.window?.rootViewController = WeatherDisplayViewController()
     self.window?.makeKeyAndVisible()
