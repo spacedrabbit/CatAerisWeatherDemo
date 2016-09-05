@@ -28,6 +28,11 @@ internal struct AppColors {
   internal static let DarkBackground: UIColor = UIColor(red: 34.0/255.0, green: 83.0/255.0, blue: 120.0/255.0, alpha: 1.0)
 }
 
+internal struct AppKeys {
+  internal static let PlacesLoader: String = "placesLoader"
+  internal static let ForecastLoader: String = "forecastLoader"
+}
+
 internal struct DateFormat {
   internal static let ISO8601: String = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
   

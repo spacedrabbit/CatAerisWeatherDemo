@@ -41,7 +41,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
   
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-
+    
     self.temperatureScaleIcon.snp_updateConstraints { (make) in
       make.height.equalTo(self.currentTempLabel.intrinsicContentSize().height * 0.80)
     }
@@ -113,7 +113,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
         self.updateDailyHUD(period)
         continue periodLoop
       }
-      print("use rest of these to fill out collection view")
+//      print("use rest of these to fill out collection view")
     }
     
   }
@@ -136,24 +136,40 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate {
     self.showViewController(alert, sender: self)
   }
   
+  /*
+   Creates a batchLoader to coordinate an AWFPlace and AWFForecast request via their respective AWFObjectLoaders.
+   Note: The reason that self.currentPlace is set initially and then later in the callback block of its placesLoader, 
+   is that a AWFPlace instantiated with a CLLocation only has information about it's lat/long. Since I need information
+   about the name of the state, country, etc.. associated with the lat/long, I need to make the request to AWFPlacesLoader.
+   Then once the request finishes, I update self.currentPlace with another instance of AWFPlace that has full location details
+   */
   func trackedLocationDidChange(location: CLLocation) {
-    
-     // ugh... these requests are going to beed to be batched since these async responses aren't guaranteed to be available
-    // when the UI is updating...
     self.currentPlace = AWFPlace(coordinate: location.coordinate)
-    self.placeLoader.getPlace(AWFPlace(coordinate: location.coordinate), options: AWFRequestOptions()) { (places, error) in
-      if places.count > 0 {
-        if let validPlace: AWFPlace = places.first as? AWFPlace {
-          self.currentPlace = validPlace
-        }
-      }
-    }
     
-    self.forecastLoader.getForecastForPlace(self.currentPlace!, options: AWFRequestOptions()) { (forecasts, error) in
-      if forecasts.count > 0 {
-        if let forecast: AWFForecast = forecasts.first as? AWFForecast {
-          self.updateUIElementsForForcast(forecast)
-        }
+    let batchLoader: AWFBatchLoader = AWFBatchLoader()
+    batchLoader.addLoader(self.placeLoader, forKey: AppKeys.PlacesLoader)
+    batchLoader.addLoader(self.forecastLoader, forKey: AppKeys.ForecastLoader)
+    batchLoader.setPlaceForAllLoaders(self.currentPlace)
+    
+    batchLoader.getWithCompletionBlock { (batchLoader, error) in
+      if let placesLoader: AWFPlacesLoader = batchLoader.objectLoaderForKey(AppKeys.PlacesLoader) as? AWFPlacesLoader {
+        placesLoader.getPlace(self.currentPlace!, options: AWFRequestOptions(), completion: { (places, error) in
+          if places.count > 0 {
+            if let validPlace: AWFPlace = places.first as? AWFPlace {
+              self.currentPlace = validPlace
+            }
+          }
+        })
+      }
+      
+      if let forecastsLoader: AWFForecastsLoader = batchLoader.objectLoaderForKey(AppKeys.ForecastLoader) as? AWFForecastsLoader {
+        forecastsLoader.getForecastForPlace(self.currentPlace!, options: AWFRequestOptions(), completion: { (forecasts, error) in
+          if forecasts.count > 0 {
+            if let forecast: AWFForecast = forecasts.first as? AWFForecast {
+              self.updateUIElementsForForcast(forecast)
+            }
+          }
+        })
       }
     }
   }
