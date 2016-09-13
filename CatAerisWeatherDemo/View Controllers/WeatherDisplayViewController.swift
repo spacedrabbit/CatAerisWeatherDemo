@@ -91,6 +91,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
     
   }
   
+  // TODO: consider removing this function if all its going to do is call a func on an ivar
   internal func updateUIElementsForPlace(place: AWFPlace) {
     self.currentWeatherCard.updateUI(withPlace: place)
   }
@@ -144,6 +145,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   }
   
   
+  
   // ---------------------------------------------------------------- //
   // MARK: - Lazy Init
   internal lazy var containerView: UIView = {
@@ -171,6 +173,14 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   internal lazy var loadingView: LoadingView = {
     let loadingView: LoadingView = LoadingView()
     return loadingView
+  }()
+  
+  internal lazy var tenDayForecastView: UICollectionView = {
+//    let collectionViewLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout
+    let collectionView: UICollectionView = UICollectionView()
+    
+    
+    return collectionView
   }()
 
 }
