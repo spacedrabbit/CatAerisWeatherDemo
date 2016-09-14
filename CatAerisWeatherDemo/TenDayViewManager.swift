@@ -11,7 +11,11 @@ import UIKit
 import Aeris
 
 internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
-  internal private(set) var forecasts: [AWFForecast] = []
+  internal private(set) var forecasts: [AWFForecastPeriod] = [] {
+    willSet {
+      self.collectionView.reloadData()
+    }
+  }
   internal var collectionView: TenDayCollectionView = TenDayCollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
   
   // singleton
@@ -22,14 +26,14 @@ internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollecti
     self.collectionView.dataSource = self
   }
   
-  internal func updateForecasts(forecasts: [AWFForecast]) {
+  internal func updateForecasts(forecasts: [AWFForecastPeriod]) {
     self.forecasts = forecasts
   }
   
   
   // MARK: UICollectionViewDataSource
   internal func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return 10 //self.forecasts.count
+    return self.forecasts.count
   }
   
   internal func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -43,7 +47,7 @@ internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollecti
     backgroundView.snp_makeConstraints { (make) in
       make.edges.equalTo(collectionCell.contentView)
     }
-    
+
     return collectionCell
   }
   

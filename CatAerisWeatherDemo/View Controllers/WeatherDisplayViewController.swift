@@ -15,6 +15,8 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   internal var currentPlace: AWFPlace = AWFPlace()
   internal var locationHelper: LocationHelper = LocationHelper.manager
   internal var aerisManager: AerisRequestManager = AerisRequestManager.shared
+  internal var tenDayManager: TenDayViewManager = TenDayViewManager.shared
+  
   internal let tenDayForecastView: TenDayCollectionView = TenDayViewManager.shared.collectionView
   
   // MARK: View Lifecycle
@@ -30,7 +32,6 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
   }
 
   
@@ -84,17 +85,43 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   // MARK: - UI Updates
   internal func updateUIElementsForForcast(forecast: AWFForecast, completion: (()->Void)?) {
     
-    // no real reason to use a control label here, I just wanted to try them
-    periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
-      let dateHelper = DateConversionHelper(withDate: period.timestamp)
+    let allForecastPeriods: [AWFForecastPeriod] = (forecast.periods as! [AWFForecastPeriod])
+    let tenDayForecastPeriod: [AWFForecastPeriod] = allForecastPeriods.flatMap { (forecastPeriod: AWFForecastPeriod) -> AWFForecastPeriod? in
+      let dateHelper = DateConversionHelper(withDate: forecastPeriod.timestamp)
       if dateHelper.isTodaysDate() {
-        self.currentWeatherCard.updateUI(withForecastPeriod: period)
-        continue periodLoop
+        return nil
       }
+      return forecastPeriod
+    }
+    
+    let todaysForecastPeriod: [AWFForecastPeriod] = allForecastPeriods.flatMap { (forecastPeriod: AWFForecastPeriod) -> AWFForecastPeriod? in
+      let dateHelper = DateConversionHelper(withDate: forecastPeriod.timestamp)
+      if dateHelper.isTodaysDate() {
+        return forecastPeriod
+      }
+      return nil
+    }
+    
+    if todaysForecastPeriod.count > 0 {
+      self.currentWeatherCard.updateUI(withForecastPeriod: todaysForecastPeriod.first!)
+    }
+    
+    if tenDayForecastPeriod.count > 0 {
+      self.tenDayManager.updateForecasts(tenDayForecastPeriod)
+    }
+    
+    // no real reason to use a control label here, I just wanted to try them
+//    periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
+//      let dateHelper = DateConversionHelper(withDate: period.timestamp)
+//      if dateHelper.isTodaysDate() {
+//        self.currentWeatherCard.updateUI(withForecastPeriod: period)
+//        continue periodLoop
+//      }
       // TODO: create collection view data source from remaining forecast info
-      if completion != nil {
-        completion!()
-      }
+//    }
+    
+    if completion != nil {
+      completion!()
     }
     
   }
