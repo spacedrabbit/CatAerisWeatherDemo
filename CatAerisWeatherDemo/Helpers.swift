@@ -81,6 +81,10 @@ internal class DateConversionHelper {
     return self.dateFormatter.stringFromDate(self.convertedDate!)
   }
   
+  internal func dateAsTenDayCellFormatted() -> String {
+    self.dateFormatter.dateFormat = DateFormat.DayOfTheWeekShort
+    return self.dateFormatter.stringFromDate(self.convertedDate!)
+  }
   
   // this is used to create a standardized string from a date that i can use to compare easily while ignoring minor differences between NSDates
   internal func dateAsComparable() -> String {
