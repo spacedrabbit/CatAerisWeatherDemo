@@ -15,7 +15,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   internal var currentPlace: AWFPlace = AWFPlace()
   internal var locationHelper: LocationHelper = LocationHelper.manager
   internal var aerisManager: AerisRequestManager = AerisRequestManager.shared
-  
+  internal let tenDayForecastView: TenDayCollectionView = TenDayViewManager.shared.collectionView
   
   // MARK: View Lifecycle
   override func viewDidLoad() {
@@ -58,12 +58,20 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
       make.centerX.equalTo(self.weatherIconImageView)
       make.width.equalTo(self.containerView).inset(AppLayout.StandardMargin)
     }
+    
+    self.tenDayForecastView.snp_makeConstraints { (make) in
+      make.bottom.equalTo(self.containerView)
+      make.left.equalTo(self.containerView).offset(AppLayout.StandardMargin)
+      make.right.equalTo(self.containerView).inset(AppLayout.StandardMargin)
+      make.top.equalTo(self.currentWeatherCard.snp_bottom)
+    }
   }
   
   private func setupViewHierarchy() {
     self.view.addSubview(containerView)
     self.containerView.addSubview(weatherIconImageView)
     self.containerView.addSubview(currentWeatherCard)
+    self.containerView.addSubview(tenDayForecastView)
     
     self.view.addSubview(loadingView)
 
@@ -175,13 +183,5 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
     return loadingView
   }()
   
-  internal lazy var tenDayForecastView: UICollectionView = {
-//    let collectionViewLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout
-    let collectionView: UICollectionView = UICollectionView()
-    
-    
-    return collectionView
-  }()
-
 }
 

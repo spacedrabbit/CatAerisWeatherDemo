@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     AerisEngine.engineWithKey(AERIS_ID, secret: AERIS_SECRET)
 //    AerisEngine.enableDebug()
 
+    LocationHelper.manager.checkAuthStatusAndRequestIfNeeded()
+    
     self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
     self.window?.rootViewController = WeatherDisplayViewController()
     self.window?.makeKeyAndVisible()
