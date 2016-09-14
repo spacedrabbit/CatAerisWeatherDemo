@@ -39,13 +39,8 @@ internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollecti
   internal func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     let collectionCell: UICollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier(TenDayCollectionView.cellIdentifier, forIndexPath: indexPath)
     
-    // TODO: make cell subclass
-    let backgroundView: UIView = UIView()
-    backgroundView.backgroundColor = UIColor.redColor()
-
-    collectionCell.contentView.addSubview(backgroundView)
-    backgroundView.snp_makeConstraints { (make) in
-      make.edges.equalTo(collectionCell.contentView)
+    if let tenDayCell: TenDayCollectionViewCell = collectionCell as? TenDayCollectionViewCell {
+      tenDayCell.tempLabel.text = "\(self.forecasts[indexPath.row].avgTempF)"
     }
 
     return collectionCell

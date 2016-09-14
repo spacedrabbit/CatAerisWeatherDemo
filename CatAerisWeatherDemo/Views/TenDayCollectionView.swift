@@ -19,7 +19,7 @@ class TenDayCollectionView: UICollectionView {
     // TODO: customize both of these later
     self.setCollectionViewLayout(self.flowLayout, animated: false)
     self.backgroundColor = UIColor.blueColor()
-    self.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: TenDayCollectionView.cellIdentifier)
+    self.registerClass(TenDayCollectionViewCell.self, forCellWithReuseIdentifier: TenDayCollectionView.cellIdentifier)
   }
   
   required init?(coder aDecoder: NSCoder) {
