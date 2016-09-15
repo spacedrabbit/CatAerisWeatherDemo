@@ -48,20 +48,22 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
       make.bottom.right.equalTo(self.view).inset(AppLayout.StandardMargin)
     }
     
-    self.weatherIconImageView.snp_makeConstraints { (make) in
-      make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
-      make.centerX.equalTo(self.containerView)
-      make.size.equalTo(CGSize(width: 128.0, height: 128.0))
-    }
+//    self.weatherIconImageView.snp_makeConstraints { (make) in
+//      make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
+//      make.centerX.equalTo(self.containerView)
+//      make.size.equalTo(CGSize(width: 128.0, height: 128.0))
+//    }
     
     self.currentWeatherCard.snp_makeConstraints { (make) in
-      make.top.equalTo(self.weatherIconImageView.snp_bottom).offset(AppLayout.StandardMargin)
-      make.centerX.equalTo(self.weatherIconImageView)
+      make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
+      make.centerX.equalTo(self.containerView)
+//      make.top.equalTo(self.weatherIconImageView.snp_bottom).offset(AppLayout.StandardMargin)
+//      make.centerX.equalTo(self.weatherIconImageView)
       make.width.equalTo(self.containerView).inset(AppLayout.StandardMargin)
     }
     
     self.tenDayForecastView.snp_makeConstraints { (make) in
-      make.bottom.equalTo(self.containerView)
+      make.bottom.equalTo(self.containerView).inset(AppLayout.StandardMargin)
       make.left.equalTo(self.containerView).offset(AppLayout.StandardMargin)
       make.right.equalTo(self.containerView).inset(AppLayout.StandardMargin)
       make.top.equalTo(self.currentWeatherCard.snp_bottom)

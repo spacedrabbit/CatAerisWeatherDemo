@@ -16,7 +16,7 @@ let AERIS_NAMESPACE: String = "catthoughts.CatAerisWeatherDemo"
 internal struct AppLayout {
   internal static let StandardMargin: CGFloat = 8.0
   internal static let StatusBar: CGFloat = 22.0
-  internal static let MinimumCellSize: CGFloat = 124.0
+  internal static let MinimumCellSize: CGFloat = 100.0
 }
 
 internal struct AppFont {

@@ -15,7 +15,6 @@ class TenDayCollectionViewCell: UICollectionViewCell {
     
     self.setupViewHierarchy()
     self.configureConstraints()
-    self.adjustSubclass()
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -25,8 +24,9 @@ class TenDayCollectionViewCell: UICollectionViewCell {
   private func configureConstraints() {
     self.containterView.snp_makeConstraints { (make) in
       make.center.equalTo(self.contentView)
-      make.top.left.equalTo(self.contentView).offset(AppLayout.StandardMargin)
-      make.right.bottom.equalTo(self.contentView).inset(AppLayout.StandardMargin)
+      make.top.equalTo(self.contentView).offset(AppLayout.StandardMargin)
+      make.width.equalTo(AppLayout.MinimumCellSize)
+      make.bottom.equalTo(self.contentView).inset(AppLayout.StandardMargin)
     }
     
     self.weekdayLabel.snp_makeConstraints { (make) in
@@ -35,8 +35,14 @@ class TenDayCollectionViewCell: UICollectionViewCell {
       make.right.lessThanOrEqualTo(self.containterView).inset(AppLayout.StandardMargin)
     }
     
-    self.tempLabel.snp_makeConstraints { (make) in
+    self.weatherIconImageView.snp_makeConstraints { (make) in
       make.top.equalTo(self.weekdayLabel.snp_bottom).offset(AppLayout.StandardMargin)
+      make.size.equalTo(CGSize(width: 36.0, height: 36.0))
+      make.centerX.equalTo(self.containterView)
+    }
+    
+    self.tempLabel.snp_makeConstraints { (make) in
+      make.top.equalTo(self.weatherIconImageView.snp_bottom).offset(AppLayout.StandardMargin)
       make.centerX.equalTo(self.weekdayLabel)
       make.bottom.lessThanOrEqualTo(self.containterView)
     }
@@ -48,10 +54,6 @@ class TenDayCollectionViewCell: UICollectionViewCell {
     self.containterView.addSubview(weekdayLabel)
     self.containterView.addSubview(tempLabel)
     self.containterView.addSubview(weatherIconImageView)
-  }
-  
-  private func adjustSubclass() {
-    
   }
   
   // ---------------------------------------------------------------- //
