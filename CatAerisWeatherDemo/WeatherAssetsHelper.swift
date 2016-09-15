@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Aeris
 
 // hoping that loading all of these doesn't impact performance too much
 internal struct WeatherAssetHelper {
@@ -46,63 +47,13 @@ internal struct WeatherAssetHelper {
   internal static let Celcius: UIImage? = UIImage(named: "temp_scale_cel")
   internal static let Farenheit: UIImage? = UIImage(named: "temp_scale_far")
   internal static let ThermometerMid: UIImage? = UIImage(named: "therm")
-}
-
-
-internal class DateConversionHelper {
   
-  
-  // MARK: - iVars
-  internal var fullWeatherString: String = ""
-  internal var convertedDate: NSDate?
-  internal var dateFormatter: NSDateFormatter = NSDateFormatter()
-  
-  
-  // MARK: - Inits
-  init(weatherString: String) {
-    self.fullWeatherString = weatherString
-    self.convertedDate = self.dateFormatter.dateFromString(self.fullWeatherString)
-  }
-  
-  init(withDate date: NSDate) {
-    self.convertedDate = date
-    self.fullWeatherString = self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  
-  // MARK: - Conversions
-  internal func dateAsExtendedReadable() -> String {
-    self.dateFormatter.dateFormat = DateFormat.ExtendedHumanReadable
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  internal func dateAsShortReadable() -> String {
-    self.dateFormatter.dateFormat = DateFormat.ShortHumanReadable
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  internal func dateAsTenDayCellFormatted() -> String {
-    self.dateFormatter.dateFormat = DateFormat.DayOfTheWeekShort
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  // this is used to create a standardized string from a date that i can use to compare easily while ignoring minor differences between NSDates
-  internal func dateAsComparable() -> String {
-    self.dateFormatter.dateFormat = DateFormat.ComparisonFormat
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  
-  // MARK: - Helpers
-  internal func isTodaysDate() -> Bool {
-    let storedDate: String = self.dateAsComparable()
-    let newDate: String = DateConversionHelper(withDate: NSDate()).dateAsComparable()
+  internal static func assetForPeriod(period: AWFForecastPeriod) -> UIImage? {
     
-    if storedDate == newDate {
-//      print("Both string are the same")
-      return true
+    if let coverageCode: ParsedWeather = AerisCodeParser.parseWeatherCode(period.weatherCoded) {
+      // TODO: kinda hate this is an optional tuple with optional tuple members... change this pl0x
     }
     
-    return false
+    return nil
   }
 }

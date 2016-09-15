@@ -57,7 +57,7 @@ class TenDayCollectionViewCell: UICollectionViewCell {
   // MARK: - Lazy Inits
   internal lazy var containterView: UIView = {
     let view: UIView = UIView()
-    
+    view.backgroundColor = UIColor.yellowColor()
     return view
   }()
   

@@ -85,6 +85,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   // MARK: - UI Updates
   internal func updateUIElementsForForcast(forecast: AWFForecast, completion: (()->Void)?) {
     
+    // TODO: i hate these two flatmaps, code is exactly the same sans condition. do as a single call or go back to foreach
     let allForecastPeriods: [AWFForecastPeriod] = (forecast.periods as! [AWFForecastPeriod])
     let tenDayForecastPeriod: [AWFForecastPeriod] = allForecastPeriods.flatMap { (forecastPeriod: AWFForecastPeriod) -> AWFForecastPeriod? in
       let dateHelper = DateConversionHelper(withDate: forecastPeriod.timestamp)
@@ -102,6 +103,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
       return nil
     }
     
+    // this should prob just be combined into a single call that updates the UI and then calls the completion
     if todaysForecastPeriod.count > 0 {
       self.currentWeatherCard.updateUI(withForecastPeriod: todaysForecastPeriod.first!)
     }
@@ -111,15 +113,20 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
     }
     
     // no real reason to use a control label here, I just wanted to try them
-//    periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
-//      let dateHelper = DateConversionHelper(withDate: period.timestamp)
-//      if dateHelper.isTodaysDate() {
-//        self.currentWeatherCard.updateUI(withForecastPeriod: period)
-//        continue periodLoop
-//      }
-      // TODO: create collection view data source from remaining forecast info
-//    }
+    periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
+      print("FULL CODED \(period.weatherFullCoded)")
+      
+      let dateHelper = DateConversionHelper(withDate: period.timestamp)
+      if dateHelper.isTodaysDate() {
+        self.currentWeatherCard.updateUI(withForecastPeriod: period)
+        
+        
+        break periodLoop
+      }
+//      TODO: create collection view data source from remaining forecast info
+    }
     
+    // TODO: this function needs to be re-written to properly call the completion closure
     if completion != nil {
       completion!()
     }
