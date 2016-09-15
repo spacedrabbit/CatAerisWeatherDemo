@@ -47,9 +47,15 @@ class CurrentWeatherCardView: UIView {
       make.edges.equalTo(self)
     }
     
+    self.weatherIconImageView.snp_makeConstraints { (make) in
+      make.top.equalTo(self.containerView)
+      make.size.equalTo(CGSize(width: 96.0, height: 96.0))
+      make.centerX.equalTo(self.containerView)
+    }
+    
     self.topInfoContainerView.snp_makeConstraints { (make) in
-      make.top.left.right.equalTo(self.containerView)
-      make.bottom.equalTo(self.containerView.snp_centerY)
+      make.top.equalTo(self.weatherIconImageView.snp_bottom)
+      make.left.right.equalTo(self.containerView)
     }
     
     self.bottomInfoContainerView.snp_makeConstraints { (make) in
