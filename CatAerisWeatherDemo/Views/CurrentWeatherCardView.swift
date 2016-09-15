@@ -94,6 +94,7 @@ class CurrentWeatherCardView: UIView {
   private func setupViewHierarchy() {
     self.addSubview(containerView)
     
+    self.containerView.addSubview(weatherIconImageView)
     self.containerView.addSubview(topInfoContainerView)
     self.containerView.addSubview(bottomInfoContainerView)
     
@@ -132,6 +133,7 @@ class CurrentWeatherCardView: UIView {
   }
   
   // MARK: - Lazy Inits
+  // containers
   internal lazy var containerView: UIView = {
     let view: UIView = UIView()
     view.backgroundColor = AppColors.StandardBackground
@@ -153,6 +155,7 @@ class CurrentWeatherCardView: UIView {
     return view
   }()
   
+  // label
   internal lazy var currentTempLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: AppFont.Roboto.Thin, size: 88.0)
@@ -199,5 +202,12 @@ class CurrentWeatherCardView: UIView {
     label.textColor = AppColors.DarkBackground
     label.numberOfLines = 3
     return label
+  }()
+  
+  // image
+  internal lazy var weatherIconImageView: UIImageView = {
+    let imageView: UIImageView = UIImageView(image: UIImage(named: "cloudy_day"))
+    imageView.contentMode = .ScaleAspectFit
+    return imageView
   }()
 }

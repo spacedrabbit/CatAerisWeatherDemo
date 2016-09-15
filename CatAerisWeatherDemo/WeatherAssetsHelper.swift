@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Aeris
 
-// hoping that loading all of these doesn't impact performance too much
+// hoping that loading all of these doesn't impact performance too much (does not seem to)
 internal struct WeatherAssetHelper {
   // Clouds
   internal static let CloudyDay: UIImage? = UIImage(named: "cloudy_day")

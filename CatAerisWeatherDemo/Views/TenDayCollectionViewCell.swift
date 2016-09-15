@@ -47,6 +47,7 @@ class TenDayCollectionViewCell: UICollectionViewCell {
     
     self.containterView.addSubview(weekdayLabel)
     self.containterView.addSubview(tempLabel)
+    self.containterView.addSubview(weatherIconImageView)
   }
   
   private func adjustSubclass() {
@@ -63,7 +64,7 @@ class TenDayCollectionViewCell: UICollectionViewCell {
   
   internal lazy var tempLabel: UILabel = {
     let label: UILabel = UILabel()
-    label.font = UIFont(name: AppFont.Roboto.Regular, size: 24.0)
+    label.font = UIFont(name: AppFont.Roboto.Regular, size: 28.0)
     label.textColor = AppColors.StandardTextColor
     label.textAlignment = .Center
     return label
@@ -71,9 +72,15 @@ class TenDayCollectionViewCell: UICollectionViewCell {
   
   internal lazy var weekdayLabel: UILabel = {
     let label: UILabel = UILabel()
-    label.font = UIFont(name: AppFont.Roboto.Thin, size: 18.0)
+    label.font = UIFont(name: AppFont.Roboto.Thin, size: 24.0)
     label.textColor = AppColors.StandardTextColor
     label.textAlignment = .Center
     return label
+  }()
+  
+  internal lazy var weatherIconImageView: UIImageView = {
+    let imageView: UIImageView = UIImageView(image: WeatherAssetHelper.Sunny)
+    imageView.contentMode = .ScaleAspectFit
+    return imageView
   }()
 }

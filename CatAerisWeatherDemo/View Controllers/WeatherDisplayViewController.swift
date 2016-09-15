@@ -83,61 +83,30 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   // ---------------------------------------------------------------- //
   // MARK: - UI Updates
-  internal func updateUIElementsForForcast(forecast: AWFForecast, completion: (()->Void)?) {
+  internal func updateUIElements(place: AWFPlace, forecast: AWFForecast, completion: (()->Void)?) {
     
-    // TODO: i hate these two flatmaps, code is exactly the same sans condition. do as a single call or go back to foreach
-    let allForecastPeriods: [AWFForecastPeriod] = (forecast.periods as! [AWFForecastPeriod])
-    let tenDayForecastPeriod: [AWFForecastPeriod] = allForecastPeriods.flatMap { (forecastPeriod: AWFForecastPeriod) -> AWFForecastPeriod? in
-      let dateHelper = DateConversionHelper(withDate: forecastPeriod.timestamp)
-      if dateHelper.isTodaysDate() {
-        return nil
-      }
-      return forecastPeriod
-    }
+    self.currentWeatherCard.updateUI(withPlace: place)
     
-    let todaysForecastPeriod: [AWFForecastPeriod] = allForecastPeriods.flatMap { (forecastPeriod: AWFForecastPeriod) -> AWFForecastPeriod? in
-      let dateHelper = DateConversionHelper(withDate: forecastPeriod.timestamp)
-      if dateHelper.isTodaysDate() {
-        return forecastPeriod
-      }
-      return nil
-    }
-    
-    // this should prob just be combined into a single call that updates the UI and then calls the completion
-    if todaysForecastPeriod.count > 0 {
-      self.currentWeatherCard.updateUI(withForecastPeriod: todaysForecastPeriod.first!)
-    }
-    
-    if tenDayForecastPeriod.count > 0 {
-      self.tenDayManager.updateForecasts(tenDayForecastPeriod)
-    }
-    
-    // no real reason to use a control label here, I just wanted to try them
-    periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
-      print("FULL CODED \(period.weatherFullCoded)")
+    var weeklyForecastPeriods: [AWFForecastPeriod] = []
+    for period in forecast.periods as! [AWFForecastPeriod] {
       
       let dateHelper = DateConversionHelper(withDate: period.timestamp)
       if dateHelper.isTodaysDate() {
         self.currentWeatherCard.updateUI(withForecastPeriod: period)
-        
-        
-        break periodLoop
+        continue
       }
-//      TODO: create collection view data source from remaining forecast info
+      weeklyForecastPeriods.append(period)
+    }
+
+    if weeklyForecastPeriods.count > 0 {
+      self.tenDayManager.updateForecasts(weeklyForecastPeriods)
     }
     
-    // TODO: this function needs to be re-written to properly call the completion closure
     if completion != nil {
       completion!()
     }
-    
   }
-  
-  // TODO: consider removing this function if all its going to do is call a func on an ivar
-  internal func updateUIElementsForPlace(place: AWFPlace) {
-    self.currentWeatherCard.updateUI(withPlace: place)
-  }
-  
+
   
   // ---------------------------------------------------------------- //
   // MARK: - LocationHelperDelegate
@@ -174,12 +143,10 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   }
   
   func forecastRequestDidFinish(forecast: AWFForecast, forPlace place: AWFPlace) {
-    self.updateUIElementsForForcast(forecast) { () in
-      self.loadingView.animateOut()
+    self.updateUIElements(place, forecast: forecast) {
       // TODO: make sure interactively is fine, and that the view is actually removed
+      self.loadingView.animateOut()
     }
-    
-    self.updateUIElementsForPlace(place)
   }
   
   func forecastRequestDidFailWithError(error: NSError) {
