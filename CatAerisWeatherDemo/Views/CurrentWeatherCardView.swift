@@ -122,6 +122,7 @@ class CurrentWeatherCardView: UIView {
     self.highTempLabel.text = "Hi: \(period.maxTempF)℉"
     self.lowTempLabel.text = "Lo: \(period.minTempF)℉"
     self.fullDescriptionLabel.text = period.weatherFull
+    self.weatherIconImageView.image = WeatherAssetHelper.assetForPeriod(period)
     
     self.alpha = 0.0
     UIView.animateWithDuration(0.25) {

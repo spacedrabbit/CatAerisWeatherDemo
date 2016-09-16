@@ -42,6 +42,7 @@ internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollecti
     if let tenDayCell: TenDayCollectionViewCell = collectionCell as? TenDayCollectionViewCell {
       tenDayCell.tempLabel.text = "\(self.forecasts[indexPath.row].avgTempF)"
       tenDayCell.weekdayLabel.text = DateConversionHelper(withDate: self.forecasts[indexPath.row].timestamp).dateAsTenDayCellFormatted()
+      tenDayCell.weatherIconImageView.image = WeatherAssetHelper.assetForPeriod(self.forecasts[indexPath.row])
     }
 
     return collectionCell

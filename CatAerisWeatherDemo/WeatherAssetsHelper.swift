@@ -52,8 +52,74 @@ internal struct WeatherAssetHelper {
     
     if let coverageCode: ParsedWeather = AerisCodeParser.parseWeatherCode(period.weatherCoded) {
       
+      guard let validComponent: String = coverageCode.weather else {
+        return WeatherAssetHelper.Earth
+      }
       
-      
+      switch validComponent {
+      // weather specific
+      case WeatherCode.BlowingDust,
+           WeatherCode.BlowingSand,
+           WeatherCode.BlowingSnow,
+           WeatherCode.BlowingSpray:
+        return Windy
+        
+      case WeatherCode.Drizzle,
+           WeatherCode.Rain,
+           WeatherCode.Mist,
+           WeatherCode.RainShowers:
+        return Umbrella
+        
+      case WeatherCode.RainSnowMix,
+           WeatherCode.Waterspouts:
+        return Rainy
+        
+      case WeatherCode.FreezingDrizzle,
+           WeatherCode.FreezingRain,
+           WeatherCode.FreezingSpray:
+        return Snowflake
+        
+      case WeatherCode.Snow,
+           WeatherCode.SnowShowers,
+           WeatherCode.SnowSleetMix,
+           WeatherCode.Frost,
+           WeatherCode.WintryMix:
+        return Snowflake
+        
+      case WeatherCode.FreezingFog,
+           WeatherCode.IceFog:
+        return Snowflake
+        
+      case WeatherCode.Hail,
+           WeatherCode.RainSnowMix,
+           WeatherCode.IceCrystals,
+           WeatherCode.IcePelletsOrSleet:
+        return Hail
+        
+      case WeatherCode.Smoke:
+        return Tornado
+        
+      case WeatherCode.Thunderstorms:
+        return Storm
+        
+      case WeatherCode.VolcanicAsh:
+        return Lightning
+        
+      // cloud coverage
+      case CloudCode.Clear:
+        return Sunny
+        
+      case CloudCode.MostlySunny,
+           CloudCode.PartlyCloudy:
+        return CloudyLight
+        
+      case CloudCode.MostlyCloudy,
+           CloudCode.Overcast:
+        return CloudyHeavy
+
+      default:
+        return ThermometerMid
+      }
     }
     
     return nil
