@@ -51,7 +51,9 @@ internal struct WeatherAssetHelper {
   internal static func assetForPeriod(period: AWFForecastPeriod) -> UIImage? {
     
     if let coverageCode: ParsedWeather = AerisCodeParser.parseWeatherCode(period.weatherCoded) {
-      // TODO: kinda hate this is an optional tuple with optional tuple members... change this pl0x
+      
+      
+      
     }
     
     return nil

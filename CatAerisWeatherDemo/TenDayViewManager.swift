@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Aeris
 
-internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
+internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
   internal private(set) var forecasts: [AWFForecastPeriod] = [] {
     willSet {
       self.collectionView.reloadData()
@@ -51,4 +51,15 @@ internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollecti
     return 1
   }
 
+  func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+    return AppLayout.StandardMargin
+  }
+  
+  func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    return UIEdgeInsets(top: AppLayout.StandardMargin, left: 0.0, bottom: AppLayout.StandardMargin, right: AppLayout.StandardMargin)
+  }
+  
+  func collectionView(collectionView: UICollectionView, targetContentOffsetForProposedContentOffset proposedContentOffset: CGPoint) -> CGPoint {
+    return CGPoint(x: AppLayout.StandardMargin, y: AppLayout.StandardMargin)
+  }
 }

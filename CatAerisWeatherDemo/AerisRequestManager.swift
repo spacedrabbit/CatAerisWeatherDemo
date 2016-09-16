@@ -60,7 +60,11 @@ internal class AerisRequestManager {
   }
   
   internal func beginForecastRequestForPlace(place: AWFPlace) {
-    self.forecastLoader.getForecastForPlace(place, options: AWFRequestOptions()) { (forecast, error) in
+    let requestOptions: AWFRequestOptions = AWFRequestOptions()
+    requestOptions.periodLimit = 10
+    requestOptions.fromDate = NSDate()
+    
+    self.forecastLoader.getForecastForPlace(place, options: requestOptions) { (forecast, error) in
       
       if forecast.count > 0 {
         if let forecast: AWFForecast = forecast.first as? AWFForecast {

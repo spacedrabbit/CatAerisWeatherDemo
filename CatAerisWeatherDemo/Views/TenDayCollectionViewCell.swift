@@ -60,14 +60,19 @@ class TenDayCollectionViewCell: UICollectionViewCell {
   // MARK: - Lazy Inits
   internal lazy var containterView: UIView = {
     let view: UIView = UIView()
-    view.backgroundColor = UIColor.yellowColor()
+    view.backgroundColor = AppColors.StandardTextColor
+    view.clipsToBounds = false
+    view.layer.shadowColor = AppColors.DarkBackground.CGColor
+    view.layer.shadowRadius = 2.0
+    view.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+    view.layer.shadowOpacity = 1.0
     return view
   }()
   
   internal lazy var tempLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: AppFont.Roboto.Regular, size: 28.0)
-    label.textColor = AppColors.StandardTextColor
+    label.textColor = AppColors.DarkBackground
     label.textAlignment = .Center
     return label
   }()
@@ -75,7 +80,7 @@ class TenDayCollectionViewCell: UICollectionViewCell {
   internal lazy var weekdayLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: AppFont.Roboto.Thin, size: 24.0)
-    label.textColor = AppColors.StandardTextColor
+    label.textColor = AppColors.DarkBackground
     label.textAlignment = .Center
     return label
   }()

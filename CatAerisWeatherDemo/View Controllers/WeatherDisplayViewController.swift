@@ -48,17 +48,9 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
       make.bottom.right.equalTo(self.view).inset(AppLayout.StandardMargin)
     }
     
-//    self.weatherIconImageView.snp_makeConstraints { (make) in
-//      make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
-//      make.centerX.equalTo(self.containerView)
-//      make.size.equalTo(CGSize(width: 128.0, height: 128.0))
-//    }
-    
     self.currentWeatherCard.snp_makeConstraints { (make) in
       make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
       make.centerX.equalTo(self.containerView)
-//      make.top.equalTo(self.weatherIconImageView.snp_bottom).offset(AppLayout.StandardMargin)
-//      make.centerX.equalTo(self.weatherIconImageView)
       make.width.equalTo(self.containerView).inset(AppLayout.StandardMargin)
     }
     
@@ -72,7 +64,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   private func setupViewHierarchy() {
     self.view.addSubview(containerView)
-    self.containerView.addSubview(weatherIconImageView)
+
     self.containerView.addSubview(currentWeatherCard)
     self.containerView.addSubview(tenDayForecastView)
     
@@ -169,16 +161,9 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   internal lazy var locationLabel: UILabel = {
     let label: UILabel = UILabel()
-    label.text = "Loading..."
     label.font = AppFont.StandardFont
     label.textColor = AppColors.StandardTextColor
     return label
-  }()
-  
-  internal lazy var weatherIconImageView: UIImageView = {
-    let imageView: UIImageView = UIImageView(image: UIImage(named: "cloudy_day"))
-    imageView.contentMode = .ScaleAspectFit
-    return imageView
   }()
   
   internal lazy var loadingView: LoadingView = {

@@ -22,8 +22,8 @@ class CurrentWeatherCardView: UIView {
     self.updateUI(withForecastPeriod: forecastPeriod!)
     self.updateUI(withPlace: currentPlace!)
 
-    self.setupViewHierarchy()
-    self.configureConstraints()
+//    self.setupViewHierarchy()
+//    self.configureConstraints()
   }
   
   override init(frame: CGRect) {
@@ -88,12 +88,13 @@ class CurrentWeatherCardView: UIView {
     
     // bottom container view contents
     self.locationLabel.snp_makeConstraints { (make) in
-      make.top.left.equalTo(bottomInfoContainerView)
+      make.top.left.equalTo(bottomInfoContainerView).offset(AppLayout.StandardMargin)
     }
     
     self.fullDescriptionLabel.snp_makeConstraints { (make) in
       make.top.equalTo(self.locationLabel.snp_bottom).offset(AppLayout.StandardMargin)
-      make.left.right.bottom.equalTo(self.bottomInfoContainerView)
+      make.left.equalTo(self.bottomInfoContainerView).offset(AppLayout.StandardMargin)
+      make.bottom.right.equalTo(self.bottomInfoContainerView).inset(AppLayout.StandardMargin)
     }
   }
   
@@ -142,9 +143,11 @@ class CurrentWeatherCardView: UIView {
   // containers
   internal lazy var containerView: UIView = {
     let view: UIView = UIView()
-    view.backgroundColor = AppColors.StandardBackground
+    view.backgroundColor = AppColors.StandardTextColor
     view.layer.shadowRadius = 2.0
     view.layer.shadowColor = AppColors.DarkBackground.CGColor
+    view.layer.shadowOpacity = 1.0
+    view.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
     return view
   }()
   
@@ -155,7 +158,6 @@ class CurrentWeatherCardView: UIView {
   
   internal lazy var bottomInfoContainerView: UIView = {
     let view: UIView = UIView()
-    view.backgroundColor = AppColors.StandardTextColor
     view.layer.shadowRadius = 2.0
     view.layer.shadowColor = AppColors.DarkBackground.CGColor
     return view
@@ -165,7 +167,7 @@ class CurrentWeatherCardView: UIView {
   internal lazy var currentTempLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: AppFont.Roboto.Thin, size: 88.0)
-    label.textColor = AppColors.StandardTextColor
+    label.textColor = AppColors.DarkBackground
     label.adjustsFontSizeToFitWidth = true
     return label
   }()
@@ -173,7 +175,7 @@ class CurrentWeatherCardView: UIView {
   internal lazy var feelsLikeLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: AppFont.Roboto.Light, size: 24.0)
-    label.textColor = AppColors.StandardTextColor
+    label.textColor = AppColors.DarkBackground
     label.adjustsFontSizeToFitWidth = true
     return label
   }()
@@ -181,7 +183,7 @@ class CurrentWeatherCardView: UIView {
   internal lazy var highTempLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: AppFont.Roboto.Light, size: 24.0)
-    label.textColor = AppColors.StandardTextColor
+    label.textColor = AppColors.DarkBackground
     label.adjustsFontSizeToFitWidth = true
     return label
   }()
@@ -189,7 +191,7 @@ class CurrentWeatherCardView: UIView {
   internal lazy var lowTempLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: AppFont.Roboto.Light, size: 24.0)
-    label.textColor = AppColors.StandardTextColor
+    label.textColor = AppColors.DarkBackground
     label.adjustsFontSizeToFitWidth = true
     return label
   }()
