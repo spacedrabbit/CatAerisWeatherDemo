@@ -15,7 +15,9 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   internal var currentPlace: AWFPlace = AWFPlace()
   internal var locationHelper: LocationHelper = LocationHelper.manager
   internal var aerisManager: AerisRequestManager = AerisRequestManager.shared
+  internal var tenDayManager: TenDayViewManager = TenDayViewManager.shared
   
+  internal let tenDayForecastView: TenDayCollectionView = TenDayViewManager.shared.collectionView
   
   // MARK: View Lifecycle
   override func viewDidLoad() {
@@ -30,7 +32,6 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
   }
 
   
@@ -47,23 +48,27 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
       make.bottom.right.equalTo(self.view).inset(AppLayout.StandardMargin)
     }
     
-    self.weatherIconImageView.snp_makeConstraints { (make) in
+    self.currentWeatherCard.snp_makeConstraints { (make) in
       make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
       make.centerX.equalTo(self.containerView)
-      make.size.equalTo(CGSize(width: 128.0, height: 128.0))
+      make.width.equalTo(self.containerView).inset(AppLayout.StandardMargin)
     }
     
-    self.currentWeatherCard.snp_makeConstraints { (make) in
-      make.top.equalTo(self.weatherIconImageView.snp_bottom).offset(AppLayout.StandardMargin)
-      make.centerX.equalTo(self.weatherIconImageView)
-      make.width.equalTo(self.containerView).inset(AppLayout.StandardMargin)
+    self.tenDayForecastView.snp_makeConstraints { (make) in
+      make.height.greaterThanOrEqualTo(1.0).priority(995.0)
+      make.bottom.lessThanOrEqualTo(self.containerView).inset(AppLayout.StandardMargin).priority(995.0)
+      
+      make.left.equalTo(self.containerView).offset(AppLayout.StandardMargin)
+      make.right.equalTo(self.containerView).inset(AppLayout.StandardMargin)
+      make.top.equalTo(self.currentWeatherCard.snp_bottom)
     }
   }
   
   private func setupViewHierarchy() {
     self.view.addSubview(containerView)
-    self.containerView.addSubview(weatherIconImageView)
+
     self.containerView.addSubview(currentWeatherCard)
+    self.containerView.addSubview(tenDayForecastView)
     
     self.view.addSubview(loadingView)
 
@@ -74,27 +79,30 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   // ---------------------------------------------------------------- //
   // MARK: - UI Updates
-  internal func updateUIElementsForForcast(forecast: AWFForecast, completion: (()->Void)?) {
+  internal func updateUIElements(place: AWFPlace, forecast: AWFForecast, completion: (()->Void)?) {
     
-    // no real reason to use a control label here, I just wanted to try them
-    periodLoop: for period in forecast.periods as! [AWFForecastPeriod] {
+    self.currentWeatherCard.updateUI(withPlace: place)
+    
+    var weeklyForecastPeriods: [AWFForecastPeriod] = []
+    for period in forecast.periods as! [AWFForecastPeriod] {
+      
       let dateHelper = DateConversionHelper(withDate: period.timestamp)
       if dateHelper.isTodaysDate() {
         self.currentWeatherCard.updateUI(withForecastPeriod: period)
-        continue periodLoop
+        continue
       }
-      // TODO: create collection view data source from remaining forecast info
-      if completion != nil {
-        completion!()
-      }
+      weeklyForecastPeriods.append(period)
+    }
+
+    if weeklyForecastPeriods.count > 0 {
+      self.tenDayManager.updateForecasts(weeklyForecastPeriods)
     }
     
+    if completion != nil {
+      completion!()
+    }
   }
-  
-  internal func updateUIElementsForPlace(place: AWFPlace) {
-    self.currentWeatherCard.updateUI(withPlace: place)
-  }
-  
+
   
   // ---------------------------------------------------------------- //
   // MARK: - LocationHelperDelegate
@@ -131,17 +139,16 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   }
   
   func forecastRequestDidFinish(forecast: AWFForecast, forPlace place: AWFPlace) {
-    self.updateUIElementsForForcast(forecast) { () in
-      self.loadingView.animateOut()
+    self.updateUIElements(place, forecast: forecast) {
       // TODO: make sure interactively is fine, and that the view is actually removed
+      self.loadingView.animateOut()
     }
-    
-    self.updateUIElementsForPlace(place)
   }
   
   func forecastRequestDidFailWithError(error: NSError) {
     print("Forecast request failed: \(error)")
   }
+  
   
   
   // ---------------------------------------------------------------- //
@@ -156,22 +163,15 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   internal lazy var locationLabel: UILabel = {
     let label: UILabel = UILabel()
-    label.text = "Loading..."
     label.font = AppFont.StandardFont
     label.textColor = AppColors.StandardTextColor
     return label
-  }()
-  
-  internal lazy var weatherIconImageView: UIImageView = {
-    let imageView: UIImageView = UIImageView(image: UIImage(named: "cloudy_day"))
-    imageView.contentMode = .ScaleAspectFit
-    return imageView
   }()
   
   internal lazy var loadingView: LoadingView = {
     let loadingView: LoadingView = LoadingView()
     return loadingView
   }()
-
+  
 }
 

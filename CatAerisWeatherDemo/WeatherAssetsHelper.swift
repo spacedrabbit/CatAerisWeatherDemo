@@ -8,8 +8,9 @@
 
 import Foundation
 import UIKit
+import Aeris
 
-// hoping that loading all of these doesn't impact performance too much
+// hoping that loading all of these doesn't impact performance too much (does not seem to)
 internal struct WeatherAssetHelper {
   // Clouds
   internal static let CloudyDay: UIImage? = UIImage(named: "cloudy_day")
@@ -46,59 +47,80 @@ internal struct WeatherAssetHelper {
   internal static let Celcius: UIImage? = UIImage(named: "temp_scale_cel")
   internal static let Farenheit: UIImage? = UIImage(named: "temp_scale_far")
   internal static let ThermometerMid: UIImage? = UIImage(named: "therm")
-}
-
-
-internal class DateConversionHelper {
   
-  
-  // MARK: - iVars
-  internal var fullWeatherString: String = ""
-  internal var convertedDate: NSDate?
-  internal var dateFormatter: NSDateFormatter = NSDateFormatter()
-  
-  
-  // MARK: - Inits
-  init(weatherString: String) {
-    self.fullWeatherString = weatherString
-    self.convertedDate = self.dateFormatter.dateFromString(self.fullWeatherString)
-  }
-  
-  init(withDate date: NSDate) {
-    self.convertedDate = date
-    self.fullWeatherString = self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  
-  // MARK: - Conversions
-  internal func dateAsExtendedReadable() -> String {
-    self.dateFormatter.dateFormat = DateFormat.ExtendedHumanReadable
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  internal func dateAsShortReadable() -> String {
-    self.dateFormatter.dateFormat = DateFormat.ShortHumanReadable
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  
-  // this is used to create a standardized string from a date that i can use to compare easily while ignoring minor differences between NSDates
-  internal func dateAsComparable() -> String {
-    self.dateFormatter.dateFormat = DateFormat.ComparisonFormat
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
-  }
-  
-  
-  // MARK: - Helpers
-  internal func isTodaysDate() -> Bool {
-    let storedDate: String = self.dateAsComparable()
-    let newDate: String = DateConversionHelper(withDate: NSDate()).dateAsComparable()
+  internal static func assetForPeriod(period: AWFForecastPeriod) -> UIImage? {
     
-    if storedDate == newDate {
-//      print("Both string are the same")
-      return true
+    if let coverageCode: [String] = AerisCodeParser.componentsForCode(period.weatherCoded) {
+      guard coverageCode.count == 3 else {
+        return WeatherAssetHelper.Earth
+      }
+      
+      switch coverageCode[2] {
+      // weather specific
+      case WeatherCode.BlowingDust,
+           WeatherCode.BlowingSand,
+           WeatherCode.BlowingSnow,
+           WeatherCode.BlowingSpray:
+        return Windy
+        
+      case WeatherCode.Drizzle,
+           WeatherCode.Rain,
+           WeatherCode.Mist,
+           WeatherCode.RainShowers:
+        return Umbrella
+        
+      case WeatherCode.RainSnowMix,
+           WeatherCode.Waterspouts:
+        return Rainy
+        
+      case WeatherCode.FreezingDrizzle,
+           WeatherCode.FreezingRain,
+           WeatherCode.FreezingSpray:
+        return Snowflake
+        
+      case WeatherCode.Snow,
+           WeatherCode.SnowShowers,
+           WeatherCode.SnowSleetMix,
+           WeatherCode.Frost,
+           WeatherCode.WintryMix:
+        return Snowflake
+        
+      case WeatherCode.FreezingFog,
+           WeatherCode.IceFog:
+        return Snowflake
+        
+      case WeatherCode.Hail,
+           WeatherCode.RainSnowMix,
+           WeatherCode.IceCrystals,
+           WeatherCode.IcePelletsOrSleet:
+        return Hail
+        
+      case WeatherCode.Smoke:
+        return Tornado
+        
+      case WeatherCode.Thunderstorms:
+        return Storm
+        
+      case WeatherCode.VolcanicAsh:
+        return Lightning
+        
+      // cloud coverage
+      case CloudCode.Clear:
+        return Sunny
+        
+      case CloudCode.MostlySunny,
+           CloudCode.PartlyCloudy:
+        return CloudyLight
+        
+      case CloudCode.MostlyCloudy,
+           CloudCode.Overcast:
+        return CloudyHeavy
+
+      default:
+        return ThermometerMid
+      }
     }
     
-    return false
+    return nil
   }
 }

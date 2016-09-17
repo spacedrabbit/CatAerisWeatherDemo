@@ -13,23 +13,26 @@ protocol CodeParser {
   static func valueForCode(code: String) -> String?
 }
 
+internal typealias ParsedWeather = (coverage: String? , intensity: String?, weather: String?)
 internal struct AerisCodeParser {
   // [coverage]:[intensity]:[weather]
+  static func componentsForCode(code: String) -> [String] {
+    return code.componentsSeparatedByString(":")
+  }
   
-  internal typealias ParsedWeather = (coverage: String? , intensity: String?, weather: String?)
   static func parseWeatherCode(code: String) -> ParsedWeather? {
-    
-    var codeComponents = code.componentsSeparatedByString(":")
+    var codeComponents = componentsForCode(code)
     if codeComponents.count == 3 {
       let coverageCode: String? = AerisCodeParser.coverageCodeParser(forCode: codeComponents[0])
       let intensityCode: String? = AerisCodeParser.intensityCodeParser(forCode: codeComponents[1])
       let weatherCode: String? = AerisCodeParser.weatherCodeParser(forCode: codeComponents[2])
       
-      if weatherCode == nil {
-        // for some reason, the returned value is refering to the clouds code rather than the weather codes
-        // this is a quick solution to get back a valid value to display
+      if coverageCode == nil && intensityCode == nil && weatherCode == nil {
+        // apparently, if the last component matches a cloud code it means that all values are
+        // being returned as nil and that the cloud code should be the only thing used to
+        // determine weather info
         let cloudCode = CloudCode.valueForCode(codeComponents[2])
-        return (coverageCode, intensityCode, cloudCode)
+        return (nil, nil, cloudCode)
       }
       return (coverageCode, intensityCode, weatherCode)
     }

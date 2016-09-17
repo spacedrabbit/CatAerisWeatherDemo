@@ -115,6 +115,7 @@ class LoadingView: UIView {
     return CATransform3DMakeRotation(radians, 0.0, 0.0, -1.0)
   }
   
+  // TODO: this is bugged, but i dont like it anyhow, replace entirely
   internal func animateOut() {
     if let currentLocation: CGRect = self.centeredViewFinalFrame {
       
