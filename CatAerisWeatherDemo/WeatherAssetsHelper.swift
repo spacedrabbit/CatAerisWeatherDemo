@@ -50,13 +50,12 @@ internal struct WeatherAssetHelper {
   
   internal static func assetForPeriod(period: AWFForecastPeriod) -> UIImage? {
     
-    if let coverageCode: ParsedWeather = AerisCodeParser.parseWeatherCode(period.weatherCoded) {
-      
-      guard let validComponent: String = coverageCode.weather else {
+    if let coverageCode: [String] = AerisCodeParser.componentsForCode(period.weatherCoded) {
+      guard coverageCode.count == 3 else {
         return WeatherAssetHelper.Earth
       }
       
-      switch validComponent {
+      switch coverageCode[2] {
       // weather specific
       case WeatherCode.BlowingDust,
            WeatherCode.BlowingSand,

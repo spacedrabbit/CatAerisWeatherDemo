@@ -16,10 +16,12 @@ protocol CodeParser {
 internal typealias ParsedWeather = (coverage: String? , intensity: String?, weather: String?)
 internal struct AerisCodeParser {
   // [coverage]:[intensity]:[weather]
-  // TODO: rewrite this to take cloud code as a param as well
+  static func componentsForCode(code: String) -> [String] {
+    return code.componentsSeparatedByString(":")
+  }
   
   static func parseWeatherCode(code: String) -> ParsedWeather? {
-    var codeComponents = code.componentsSeparatedByString(":")
+    var codeComponents = componentsForCode(code)
     if codeComponents.count == 3 {
       let coverageCode: String? = AerisCodeParser.coverageCodeParser(forCode: codeComponents[0])
       let intensityCode: String? = AerisCodeParser.intensityCodeParser(forCode: codeComponents[1])

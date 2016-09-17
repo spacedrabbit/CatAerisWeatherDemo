@@ -53,7 +53,11 @@ internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollecti
   }
 
   func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-    return AppLayout.StandardMargin
+    if section == 0 {
+      return 7.0 // if this value is >= 8.0, it causes a second section to automatically be creatd by the flow layout... why on earth is this..
+    }
+    
+    return 0.0
   }
   
   func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {

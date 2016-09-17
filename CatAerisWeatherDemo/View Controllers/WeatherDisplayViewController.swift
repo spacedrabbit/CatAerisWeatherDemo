@@ -55,7 +55,9 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
     }
     
     self.tenDayForecastView.snp_makeConstraints { (make) in
-      make.bottom.equalTo(self.containerView).inset(AppLayout.StandardMargin)
+      make.height.greaterThanOrEqualTo(1.0).priority(995.0)
+      make.bottom.lessThanOrEqualTo(self.containerView).inset(AppLayout.StandardMargin).priority(995.0)
+      
       make.left.equalTo(self.containerView).offset(AppLayout.StandardMargin)
       make.right.equalTo(self.containerView).inset(AppLayout.StandardMargin)
       make.top.equalTo(self.currentWeatherCard.snp_bottom)
