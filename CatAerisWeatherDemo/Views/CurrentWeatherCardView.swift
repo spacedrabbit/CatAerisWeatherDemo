@@ -10,12 +10,12 @@ import UIKit
 import Aeris
 
 class CurrentWeatherCardView: UIView {
-  private var forecastPeriod: AWFForecastPeriod!
-  private var currentPlace: AWFPlace!
+  fileprivate var forecastPeriod: AWFForecastPeriod!
+  fileprivate var currentPlace: AWFPlace!
   
   // MARK: - Initialization
   convenience init(withForecast forecast: AWFForecastPeriod, place: AWFPlace) {
-    self.init(frame: CGRectZero)
+    self.init(frame: CGRect.zero)
     self.forecastPeriod = forecast
     self.currentPlace = place
     
@@ -42,63 +42,63 @@ class CurrentWeatherCardView: UIView {
   }
   
   // MARK: - Setup
-  private func configureConstraints() {
-    self.containerView.snp_makeConstraints { (make) in
+  fileprivate func configureConstraints() {
+    self.containerView.snp.makeConstraints { (make) in
       make.edges.equalTo(self)
     }
     
-    self.weatherIconImageView.snp_makeConstraints { (make) in
+    self.weatherIconImageView.snp.makeConstraints { (make) in
       make.top.equalTo(self.containerView)
       make.size.equalTo(CGSize(width: 96.0, height: 96.0))
       make.centerX.equalTo(self.containerView)
     }
     
-    self.topInfoContainerView.snp_makeConstraints { (make) in
-      make.top.equalTo(self.weatherIconImageView.snp_bottom)
+    self.topInfoContainerView.snp.makeConstraints { (make) in
+      make.top.equalTo(self.weatherIconImageView.snp.bottom)
       make.left.right.equalTo(self.containerView)
     }
     
-    self.bottomInfoContainerView.snp_makeConstraints { (make) in
-      make.top.equalTo(self.topInfoContainerView.snp_bottom).offset(AppLayout.StandardMargin)
+    self.bottomInfoContainerView.snp.makeConstraints { (make) in
+      make.top.equalTo(self.topInfoContainerView.snp.bottom).offset(AppLayout.StandardMargin)
       make.left.right.bottom.equalTo(self.containerView)
     }
     
     // top container view contents
-    self.currentTempLabel.snp_makeConstraints { (make) in
+    self.currentTempLabel.snp.makeConstraints { (make) in
       make.left.top.bottom.equalTo(self.topInfoContainerView)
-      make.right.equalTo(self.topInfoContainerView.snp_centerX)
+      make.right.equalTo(self.topInfoContainerView.snp.centerX)
     }
     
-    self.feelsLikeLabel.snp_makeConstraints { (make) in
+    self.feelsLikeLabel.snp.makeConstraints { (make) in
       make.top.right.equalTo(self.topInfoContainerView)
-      make.left.equalTo(self.currentTempLabel.snp_right).offset(AppLayout.StandardMargin)
+      make.left.equalTo(self.currentTempLabel.snp.right).offset(AppLayout.StandardMargin)
     }
     
-    self.highTempLabel.snp_makeConstraints { (make) in
-      make.top.equalTo(self.feelsLikeLabel.snp_bottom).offset(AppLayout.StandardMargin)
-      make.left.equalTo(self.currentTempLabel.snp_right).offset(AppLayout.StandardMargin)
+    self.highTempLabel.snp.makeConstraints { (make) in
+      make.top.equalTo(self.feelsLikeLabel.snp.bottom).offset(AppLayout.StandardMargin)
+      make.left.equalTo(self.currentTempLabel.snp.right).offset(AppLayout.StandardMargin)
       make.right.equalTo(self.topInfoContainerView)
     }
     
-    self.lowTempLabel.snp_makeConstraints { (make) in
-      make.top.equalTo(self.highTempLabel.snp_bottom).offset(AppLayout.StandardMargin)
-      make.left.equalTo(self.currentTempLabel.snp_right).offset(AppLayout.StandardMargin)
+    self.lowTempLabel.snp.makeConstraints { (make) in
+      make.top.equalTo(self.highTempLabel.snp.bottom).offset(AppLayout.StandardMargin)
+      make.left.equalTo(self.currentTempLabel.snp.right).offset(AppLayout.StandardMargin)
       make.right.bottom.equalTo(self.topInfoContainerView)
     }
     
     // bottom container view contents
-    self.locationLabel.snp_makeConstraints { (make) in
+    self.locationLabel.snp.makeConstraints { (make) in
       make.top.left.equalTo(bottomInfoContainerView).offset(AppLayout.StandardMargin)
     }
     
-    self.fullDescriptionLabel.snp_makeConstraints { (make) in
-      make.top.equalTo(self.locationLabel.snp_bottom).offset(AppLayout.StandardMargin)
+    self.fullDescriptionLabel.snp.makeConstraints { (make) in
+      make.top.equalTo(self.locationLabel.snp.bottom).offset(AppLayout.StandardMargin)
       make.left.equalTo(self.bottomInfoContainerView).offset(AppLayout.StandardMargin)
       make.bottom.right.equalTo(self.bottomInfoContainerView).inset(AppLayout.StandardMargin)
     }
   }
   
-  private func setupViewHierarchy() {
+  fileprivate func setupViewHierarchy() {
     self.addSubview(containerView)
     
     self.containerView.addSubview(weatherIconImageView)
@@ -117,18 +117,18 @@ class CurrentWeatherCardView: UIView {
   
   // MARK: - Update UI
   internal func updateUI(withForecastPeriod period: AWFForecastPeriod) {
-    self.currentTempLabel.text = "\(period.avgTempF)F"
-    self.feelsLikeLabel.text = "Feels like \(period.feelslikeF)℉"
-    self.highTempLabel.text = "Hi: \(period.maxTempF)℉"
-    self.lowTempLabel.text = "Lo: \(period.minTempF)℉"
+    self.currentTempLabel.text = "\(period.avgTempF as NSNumber)F"
+    self.feelsLikeLabel.text = "Feels like \(period.feelslikeF as NSNumber)℉"
+    self.highTempLabel.text = "Hi: \(period.maxTempF as NSNumber)℉"
+    self.lowTempLabel.text = "Lo: \(period.minTempF as NSNumber)℉"
     self.fullDescriptionLabel.text = period.weatherFull
     self.weatherIconImageView.image = WeatherAssetHelper.assetForPeriod(period)
     
     self.alpha = 0.0
-    UIView.animateWithDuration(0.25) {
+    UIView.animate(withDuration: 0.25, animations: {
       self.layoutIfNeeded()
       self.alpha = 1.0
-    }
+    }) 
   }
   
   internal func updateUI(withPlace place: AWFPlace) {
@@ -146,7 +146,7 @@ class CurrentWeatherCardView: UIView {
     let view: UIView = UIView()
     view.backgroundColor = AppColors.StandardTextColor
     view.layer.shadowRadius = 2.0
-    view.layer.shadowColor = AppColors.DarkBackground.CGColor
+    view.layer.shadowColor = AppColors.DarkBackground.cgColor
     view.layer.shadowOpacity = 1.0
     view.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
     return view
@@ -160,7 +160,7 @@ class CurrentWeatherCardView: UIView {
   internal lazy var bottomInfoContainerView: UIView = {
     let view: UIView = UIView()
     view.layer.shadowRadius = 2.0
-    view.layer.shadowColor = AppColors.DarkBackground.CGColor
+    view.layer.shadowColor = AppColors.DarkBackground.cgColor
     return view
   }()
   
@@ -216,7 +216,7 @@ class CurrentWeatherCardView: UIView {
   // image
   internal lazy var weatherIconImageView: UIImageView = {
     let imageView: UIImageView = UIImageView(image: UIImage(named: "cloudy_day"))
-    imageView.contentMode = .ScaleAspectFit
+    imageView.contentMode = .scaleAspectFit
     return imageView
   }()
 }

@@ -7,5 +7,5 @@ target 'CatAerisWeatherDemo' do
 
   # Pods for CatAerisWeatherDemo
 	pod 'AerisWeather', '~> 2.3.6'
-	 pod 'SnapKit' , '~> 0.21.0'
+	pod 'SnapKit' , '~> 3.0.1'
 end

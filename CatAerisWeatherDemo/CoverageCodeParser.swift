@@ -27,7 +27,7 @@ internal struct CoverageCode: CodeParser {
   internal static let InTheVicinity: String = "VC" // VC	In the vicinity/Nearby
   internal static let WideSpread: String = "WD" // WD	Widespread
   
-  internal static func valueForCode(code: String) -> String? {
+  internal static func valueForCode(_ code: String) -> String? {
     switch code {
     case CoverageCode.AreasOf:
       return "Areas of"

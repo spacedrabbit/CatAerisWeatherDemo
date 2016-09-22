@@ -11,13 +11,13 @@ import UIKit
 import CoreLocation
 
 internal enum LocationHelperStatus {
-  case Ready, NotReady, Denied
+  case ready, notReady, denied
 }
 
 protocol LocationHelperDelegate: class {
-  func authorizationStatusDidChange(status: LocationHelperStatus)
-  func trackedLocationDidChange(location: CLLocation)
-  func alertRequiresDisplay(alert: UIAlertController)
+  func authorizationStatusDidChange(_ status: LocationHelperStatus)
+  func trackedLocationDidChange(_ location: CLLocation)
+  func alertRequiresDisplay(_ alert: UIAlertController)
 }
 
 internal class LocationHelper: NSObject, CLLocationManagerDelegate {
@@ -32,7 +32,7 @@ internal class LocationHelper: NSObject, CLLocationManagerDelegate {
   
   // singleton-ish, owning classes should keep a reference to LocationHelper.manager
   internal static var manager: LocationHelper = LocationHelper()
-  override private init() {
+  override fileprivate init() {
     super.init()
 
     self.locationManager.delegate = self
@@ -44,7 +44,7 @@ internal class LocationHelper: NSObject, CLLocationManagerDelegate {
   }
   
   func checkAuthStatusAndRequestIfNeeded() {
-    if CLLocationManager.authorizationStatus() == .NotDetermined {
+    if CLLocationManager.authorizationStatus() == .notDetermined {
       self.locationManager.requestAlwaysAuthorization()
     }
     else {
@@ -63,21 +63,21 @@ internal class LocationHelper: NSObject, CLLocationManagerDelegate {
   
   // ---------------------------------------------------------------- //
   // MARK: - CLLocationManagerDelegate
-  func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
     var delegateStatus: LocationHelperStatus
     switch status {
-    case .AuthorizedAlways, .AuthorizedWhenInUse:
-      delegateStatus = .Ready
+    case .authorizedAlways, .authorizedWhenInUse:
+      delegateStatus = .ready
       self.locationManager.startUpdatingLocation()
-    case .NotDetermined:
-      delegateStatus = .NotReady
+    case .notDetermined:
+      delegateStatus = .notReady
       print("undetermined status")
-    case .Denied, .Restricted:
-      delegateStatus = .Denied
+    case .denied, .restricted:
+      delegateStatus = .denied
       let alert = UIAlertController(title: "Weather Services Unavailable",
                                     message: "It appears as though location services are not enabled for this app. Check your settings and try again",
-                                    preferredStyle: .Alert)
-      let alertOption: UIAlertAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+                                    preferredStyle: .alert)
+      let alertOption: UIAlertAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
       alert.addAction(alertOption)
       self.delegate?.alertRequiresDisplay(alert)
     }
@@ -85,7 +85,7 @@ internal class LocationHelper: NSObject, CLLocationManagerDelegate {
     self.delegate?.authorizationStatusDidChange(delegateStatus)
   }
   
-  func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     if let validLocation: CLLocation = locations.first {
       if let trackingLocation: CLLocation = self.trackedLocation {
         // if a tracked location exist, check that it's not already the same
@@ -94,7 +94,7 @@ internal class LocationHelper: NSObject, CLLocationManagerDelegate {
         // while the app first looks for it's current location. So, an arbitrary standard of 50.0 meters is used to compare the 
         // currently tracked location with the (potentially) slightly different location pass in subsequent calls to this method.
         if (trackingLocation != validLocation) &&
-           (trackingLocation.distanceFromLocation(validLocation) > 50.0) {
+           (trackingLocation.distance(from: validLocation) > 50.0) {
           self.trackedLocation = validLocation // update if it is different
         }
       }

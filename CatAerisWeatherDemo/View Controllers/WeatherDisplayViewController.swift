@@ -37,34 +37,34 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   // ---------------------------------------------------------------- //
   // MARK: - Setup
-  private func configureConstraints() {
-    self.loadingView.snp_makeConstraints { (make) in
+  fileprivate func configureConstraints() {
+    self.loadingView.snp.makeConstraints { (make) in
       make.edges.equalTo(self.view)
     }
     
-    self.containerView.snp_makeConstraints { (make) in
+    self.containerView.snp.makeConstraints { (make) in
       make.top.equalTo(self.view).offset(AppLayout.StandardMargin + AppLayout.StatusBar)
       make.left.equalTo(self.view).offset(AppLayout.StandardMargin)
       make.bottom.right.equalTo(self.view).inset(AppLayout.StandardMargin)
     }
     
-    self.currentWeatherCard.snp_makeConstraints { (make) in
+    self.currentWeatherCard.snp.makeConstraints { (make) in
       make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
       make.centerX.equalTo(self.containerView)
       make.width.equalTo(self.containerView).inset(AppLayout.StandardMargin)
     }
     
-    self.tenDayForecastView.snp_makeConstraints { (make) in
-      make.height.greaterThanOrEqualTo(1.0).priority(995.0)
-      make.bottom.lessThanOrEqualTo(self.containerView).inset(AppLayout.StandardMargin).priority(995.0)
+    self.tenDayForecastView.snp.makeConstraints { (make) in
+//      make.height.greaterThanOrEqualTo(1.0).priority(995.0)
+      make.bottom.equalTo(self.containerView).inset(AppLayout.StandardMargin).priority(995.0)
       
       make.left.equalTo(self.containerView).offset(AppLayout.StandardMargin)
       make.right.equalTo(self.containerView).inset(AppLayout.StandardMargin)
-      make.top.equalTo(self.currentWeatherCard.snp_bottom)
+      make.top.equalTo(self.currentWeatherCard.snp.bottom)
     }
   }
   
-  private func setupViewHierarchy() {
+  fileprivate func setupViewHierarchy() {
     self.view.addSubview(containerView)
 
     self.containerView.addSubview(currentWeatherCard)
@@ -79,7 +79,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   // ---------------------------------------------------------------- //
   // MARK: - UI Updates
-  internal func updateUIElements(place: AWFPlace, forecast: AWFForecast, completion: (()->Void)?) {
+  internal func updateUIElements(_ place: AWFPlace, forecast: AWFForecast, completion: (()->Void)?) {
     
     self.currentWeatherCard.updateUI(withPlace: place)
     
@@ -106,46 +106,46 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   
   // ---------------------------------------------------------------- //
   // MARK: - LocationHelperDelegate
-  func authorizationStatusDidChange(status: LocationHelperStatus) {
+  func authorizationStatusDidChange(_ status: LocationHelperStatus) {
     // not entirely sure how I'm going to use this yet, but likely will be needed for something
     switch status {
-    case .Ready:
+    case .ready:
       print("Location Status is Ready")
-    case .NotReady:
+    case .notReady:
       print("Location Status is Not Ready")
-    case .Denied:
+    case .denied:
       print("Location Status is Denied")
     }
   }
   
-  func alertRequiresDisplay(alert: UIAlertController) {
-    self.showViewController(alert, sender: self)
+  func alertRequiresDisplay(_ alert: UIAlertController) {
+    self.show(alert, sender: self)
   }
 
-  func trackedLocationDidChange(location: CLLocation) {
+  func trackedLocationDidChange(_ location: CLLocation) {
     self.aerisManager.beginPlaceRequestForCoordinates(location.coordinate)
   }
   
   
   // ---------------------------------------------------------------- //
   // MARK: - AerisRequestManagerDelegate
-  func placesRequestDidFinish(place: AWFPlace) {
+  func placesRequestDidFinish(_ place: AWFPlace) {
     self.currentPlace = place
     self.aerisManager.beginForecastRequestForPlace(self.currentPlace)
   }
   
-  func placesRequestDidFailWithError(error: NSError) {
+  func placesRequestDidFailWithError(_ error: NSError) {
     print("Places request failed: \(error)")
   }
   
-  func forecastRequestDidFinish(forecast: AWFForecast, forPlace place: AWFPlace) {
+  func forecastRequestDidFinish(_ forecast: AWFForecast, forPlace place: AWFPlace) {
     self.updateUIElements(place, forecast: forecast) {
       // TODO: make sure interactively is fine, and that the view is actually removed
       self.loadingView.animateOut()
     }
   }
   
-  func forecastRequestDidFailWithError(error: NSError) {
+  func forecastRequestDidFailWithError(_ error: NSError) {
     print("Forecast request failed: \(error)")
   }
   
@@ -159,7 +159,7 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
     return view
   }()
   
-  internal lazy var currentWeatherCard: CurrentWeatherCardView = CurrentWeatherCardView(frame: CGRectZero)
+  internal lazy var currentWeatherCard: CurrentWeatherCardView = CurrentWeatherCardView(frame: CGRect.zero)
   
   internal lazy var locationLabel: UILabel = {
     let label: UILabel = UILabel()

@@ -17,7 +17,7 @@ internal struct CloudCode: CodeParser {
   internal static let MostlyCloudy: String = "BK"
   internal static let Overcast: String = "OV"
   
-  internal static func valueForCode(code: String) -> String? {
+  internal static func valueForCode(_ code: String) -> String? {
     switch code {
     case CloudCode.Clear:
       return "Clear"

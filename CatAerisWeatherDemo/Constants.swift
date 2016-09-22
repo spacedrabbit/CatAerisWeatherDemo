@@ -20,7 +20,7 @@ internal struct AppLayout {
 }
 
 internal struct AppFont {
-  internal static let StandardFont: UIFont = UIFont.systemFontOfSize(36.0, weight: UIFontWeightMedium)
+  internal static let StandardFont: UIFont = UIFont.systemFont(ofSize: 36.0, weight: UIFontWeightMedium)
 
   internal struct Roboto {
     internal static let FamilyName: String = "Roboto"

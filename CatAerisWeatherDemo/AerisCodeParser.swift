@@ -10,17 +10,17 @@ import Foundation
 import UIKit
 
 protocol CodeParser {
-  static func valueForCode(code: String) -> String?
+  static func valueForCode(_ code: String) -> String?
 }
 
 internal typealias ParsedWeather = (coverage: String? , intensity: String?, weather: String?)
 internal struct AerisCodeParser {
   // [coverage]:[intensity]:[weather]
-  static func componentsForCode(code: String) -> [String] {
-    return code.componentsSeparatedByString(":")
+  static func componentsForCode(_ code: String) -> [String] {
+    return code.components(separatedBy: ":")
   }
   
-  static func parseWeatherCode(code: String) -> ParsedWeather? {
+  static func parseWeatherCode(_ code: String) -> ParsedWeather? {
     var codeComponents = componentsForCode(code)
     if codeComponents.count == 3 {
       let coverageCode: String? = AerisCodeParser.coverageCodeParser(forCode: codeComponents[0])

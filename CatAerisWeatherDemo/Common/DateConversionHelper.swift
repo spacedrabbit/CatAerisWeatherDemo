@@ -43,49 +43,49 @@ internal class DateConversionHelper {
   
   // MARK: - iVars
   internal var fullWeatherString: String = ""
-  internal var convertedDate: NSDate?
-  internal var dateFormatter: NSDateFormatter = NSDateFormatter()
+  internal var convertedDate: Date?
+  internal var dateFormatter: DateFormatter = DateFormatter()
   
   
   // MARK: - Inits
   init(weatherString: String) {
     self.fullWeatherString = weatherString
-    self.convertedDate = self.dateFormatter.dateFromString(self.fullWeatherString)
+    self.convertedDate = self.dateFormatter.date(from: self.fullWeatherString)
   }
   
-  init(withDate date: NSDate) {
+  init(withDate date: Date) {
     self.convertedDate = date
-    self.fullWeatherString = self.dateFormatter.stringFromDate(self.convertedDate!)
+    self.fullWeatherString = self.dateFormatter.string(from: self.convertedDate!)
   }
   
   
   // MARK: - Conversions
   internal func dateAsExtendedReadable() -> String {
     self.dateFormatter.dateFormat = DateFormat.ExtendedHumanReadable
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
+    return self.dateFormatter.string(from: self.convertedDate!)
   }
   
   internal func dateAsShortReadable() -> String {
     self.dateFormatter.dateFormat = DateFormat.ShortHumanReadable
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
+    return self.dateFormatter.string(from: self.convertedDate!)
   }
   
   internal func dateAsTenDayCellFormatted() -> String {
     self.dateFormatter.dateFormat = DateFormat.DayOfTheWeekShort
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
+    return self.dateFormatter.string(from: self.convertedDate!)
   }
   
   // this is used to create a standardized string from a date that i can use to compare easily while ignoring minor differences between NSDates
   internal func dateAsComparable() -> String {
     self.dateFormatter.dateFormat = DateFormat.ComparisonFormat
-    return self.dateFormatter.stringFromDate(self.convertedDate!)
+    return self.dateFormatter.string(from: self.convertedDate!)
   }
   
   
   // MARK: - Helpers
   internal func isTodaysDate() -> Bool {
     let storedDate: String = self.dateAsComparable()
-    let newDate: String = DateConversionHelper(withDate: NSDate()).dateAsComparable()
+    let newDate: String = DateConversionHelper(withDate: Date()).dateAsComparable()
     
     if storedDate == newDate {
       //      print("Both string are the same")

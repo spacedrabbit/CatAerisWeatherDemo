@@ -40,7 +40,7 @@ internal struct WeatherCode: CodeParser {
   internal static let FreezingRain: String = "ZR"
   internal static let FreezingSpray: String = "ZY"
   
-  internal static func valueForCode(code: String) -> String? {
+  internal static func valueForCode(_ code: String) -> String? {
     switch code {
     case WeatherCode.Hail:
       return "Hail"

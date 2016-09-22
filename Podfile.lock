@@ -18,17 +18,17 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - SnapKit (0.21.1)
+  - SnapKit (3.0.1)
 
 DEPENDENCIES:
   - AerisWeather (~> 2.3.6)
-  - SnapKit (~> 0.21.0)
+  - SnapKit (~> 3.0.1)
 
 SPEC CHECKSUMS:
   AerisWeather: 66eddc9afcc9e0977bedbb904b46172319636751
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  SnapKit: bbad04cb016c7cead63965f16b00c09318d271ee
+  SnapKit: f818b8326d45b4e1c777d0ab27b5c0a3624bfdeb
 
-PODFILE CHECKSUM: 78df6cf3a151505fac9cbe8108bfa22f94ca6ed6
+PODFILE CHECKSUM: 211df777965d9a0f8759c9ba705ff4e71c00bfa2
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.0.rc.1

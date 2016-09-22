@@ -15,7 +15,7 @@ internal struct IntensityCode: CodeParser {
   internal static let Heavy: String = "H"
   internal static let VeryHeavy: String = "VH"
   
-  internal static func valueForCode(code: String) -> String? {
+  internal static func valueForCode(_ code: String) -> String? {
     switch code {
     case IntensityCode.VeryLight:
       return "Very Light"

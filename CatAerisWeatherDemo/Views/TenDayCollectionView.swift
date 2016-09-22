@@ -15,10 +15,10 @@ class TenDayCollectionView: UICollectionView {
   // MARK: - Initialization
   override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
     super.init(frame: frame, collectionViewLayout: layout)
-    self.backgroundColor = UIColor.clearColor()
+    self.backgroundColor = UIColor.clear
     // TODO: customize flow layout
     self.setCollectionViewLayout(self.flowLayout, animated: false)
-    self.registerClass(TenDayCollectionViewCell.self, forCellWithReuseIdentifier: TenDayCollectionView.cellIdentifier)
+    self.register(TenDayCollectionViewCell.self, forCellWithReuseIdentifier: TenDayCollectionView.cellIdentifier)
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -30,7 +30,7 @@ class TenDayCollectionView: UICollectionView {
   // MARK: - Lazy Instances
   internal lazy var flowLayout: UICollectionViewFlowLayout = {
     let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-    layout.scrollDirection = .Horizontal
+    layout.scrollDirection = .horizontal
     layout.minimumInteritemSpacing = 1.0
     layout.sectionHeadersPinToVisibleBounds = true
     layout.estimatedItemSize = CGSize(width: 100.0, height: 100.0) // TODO: adjust size based on height after layout occurs
