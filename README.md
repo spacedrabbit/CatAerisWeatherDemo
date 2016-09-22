@@ -29,9 +29,7 @@ Simple Weather App using the [Aeris Weather API](http://www.aerisweather.com/sup
 
 --- 
 ### Environment: 
-Runs on Xcode 7.3.1 (Swift 2.2/2.3)
-
-Project can be updated to Xcode 8/Swift 3.0 once SnapKit is updated to Swift 3 (as of this writting, it is having issues despite attempting to work off its [0.40 beta feature branch](https://github.com/SnapKit/SnapKit/tree/feature/0.40.0))
+Runs on Xcode 8.0.0 (Swift 3.0)
 
 ---
 ### Pods: 
