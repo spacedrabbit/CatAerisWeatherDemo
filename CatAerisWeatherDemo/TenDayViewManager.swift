@@ -12,6 +12,9 @@ import Aeris
 
 internal class TenDayViewManager: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
   internal fileprivate(set) var forecasts: [AWFForecastPeriod] = [] {
+    didSet {
+      self.collectionView.reloadData()
+    }
     willSet {
       self.collectionView.reloadData()
     }

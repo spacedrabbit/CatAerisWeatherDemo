@@ -33,6 +33,19 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
+  
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    
+    self.tenDayForecastView.snp.makeConstraints { (make) in
+      make.height.equalTo(200).priority(991.0)
+      make.bottom.equalTo(self.containerView).inset(AppLayout.StandardMargin).priority(990.0)
+      
+      make.left.equalTo(self.containerView).offset(AppLayout.StandardMargin)
+      make.right.equalTo(self.containerView).inset(AppLayout.StandardMargin)
+      make.top.equalTo(self.currentWeatherCard.snp.bottom)
+    }
+  }
 
   
   // ---------------------------------------------------------------- //
@@ -52,15 +65,6 @@ class WeatherDisplayViewController: UIViewController, LocationHelperDelegate, Ae
       make.top.equalTo(self.containerView).offset(AppLayout.StandardMargin)
       make.centerX.equalTo(self.containerView)
       make.width.equalTo(self.containerView).inset(AppLayout.StandardMargin)
-    }
-    
-    self.tenDayForecastView.snp.makeConstraints { (make) in
-//      make.height.greaterThanOrEqualTo(1.0).priority(995.0)
-      make.bottom.equalTo(self.containerView).inset(AppLayout.StandardMargin).priority(995.0)
-      
-      make.left.equalTo(self.containerView).offset(AppLayout.StandardMargin)
-      make.right.equalTo(self.containerView).inset(AppLayout.StandardMargin)
-      make.top.equalTo(self.currentWeatherCard.snp.bottom)
     }
   }
   
