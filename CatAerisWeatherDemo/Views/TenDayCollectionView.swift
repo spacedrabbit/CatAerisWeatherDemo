@@ -17,6 +17,7 @@ class TenDayCollectionView: UICollectionView {
     super.init(frame: frame, collectionViewLayout: layout)
     self.backgroundColor = UIColor.clear
     // TODO: customize flow layout
+    self.showsHorizontalScrollIndicator = false
     self.setCollectionViewLayout(self.flowLayout, animated: false)
     self.register(TenDayCollectionViewCell.self, forCellWithReuseIdentifier: TenDayCollectionView.cellIdentifier)
   }
